@@ -1,0 +1,8 @@
+﻿  fatal: Not a git repository (or any of the parent directories): .git
+  fatal: Not a git repository (or any of the parent directories): .git
+  CCharSpell.cpp
+src\graysvr\CCharSpell.cpp(480): warning C4244: '-=': conversion from 'int' to 'WORD', possible loss of data
+src\graysvr\CCharSpell.cpp(834): warning C4244: 'argument': conversion from 'int' to 'WORD', possible loss of data
+src\graysvr\CCharSpell.cpp(934): warning C4244: '+=': conversion from 'int' to 'WORD', possible loss of data
+  GraySvr.vcxproj -> C:\Users\Fernando Rocha\Desktop\Source-master\Release\SphereSvr.exe
+  GraySvr.vcxproj -> C:\Users\Fernando Rocha\Desktop\Source-master\Release\SphereSvr.pdb (Full PDB)
