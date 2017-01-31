@@ -672,39 +672,14 @@ bool CClient::Event_Walk(BYTE rawdir, BYTE sequence)
 	CPointMap pt = m_pChar->GetTopPoint();
 	CPointMap ptOld = pt;
 
+	if (!Event_CheckWalkBuffer())
+	{
+		new PacketMovementRej(this, sequence);
+		return false;
+	}
+
 	if ( dir == m_pChar->m_dirFace )
 	{
-		if ( IsSetEF(EF_FastWalkPrevention) )
-		{
-			// The fastest way to get system clock is using g_World.GetCurrentTime().GetTimeRaw() to
-			// read the value already stored by Sphere main timer. But this value is only updated at
-			// tenths of second precision, which won't work here because we need millisecs precision.
-			// So to reach this precision we must get the system clock manually at each walk request.
-			INT64 iCurTime = CWorldClock::GetSystemClock();
-			if ( iCurTime < m_timeNextEventWalk )		// fastwalk detected
-			{
-				new PacketMovementRej(this, sequence);
-				return false;
-			}
-
-			INT64 iDelay = 0;
-			if ( m_pChar->IsStatFlag(STATF_OnHorse|STATF_Hovering) )
-				iDelay = (rawdir & 0x80) ? 100 : 200;
-			else
-				iDelay = (rawdir & 0x80) ? 200 : 400;
-#ifdef _WIN32
-			// Windows OS doesn't use high precision timing, so values must be lowered in a few milliseconds
-			// to avoid false-positives results. But this will also decrease the fastwalk detection accuracy
-			iDelay -= 40;
-#endif
-			m_timeNextEventWalk = iCurTime + iDelay;
-		}
-		else if ( !Event_CheckWalkBuffer() )
-		{
-			new PacketMovementRej(this, sequence);
-			return false;
-		}
-
 		pt.Move(dir);
 
 		// Check Z height. The client already knows this but doesn't tell us.
@@ -749,12 +724,6 @@ bool CClient::Event_Walk(BYTE rawdir, BYTE sequence)
 	}
 	else
 	{
-		if ( !Event_CheckWalkBuffer() )
-		{
-			new PacketMovementRej(this, sequence);
-			return false;
-		}
-
 		// Just a change in dir
 		new PacketMovementAck(this, sequence);
 		m_pChar->m_dirFace = dir;
