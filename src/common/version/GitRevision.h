@@ -1,2 +1,2 @@
-#define __GITREVISION__ -2405 
-#define __GITHASH__ "17909cb" 
+#define __GITREVISION__ -2404 
+#define __GITHASH__ "c52bc2b" 

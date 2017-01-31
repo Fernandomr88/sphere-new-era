@@ -751,6 +751,7 @@ bool CClient::Event_Walk(BYTE rawdir, BYTE sequence)
 	else
 	{
 		// Just a change in dir
+		m_iWalkStepCount++;					// Increase step count to use on walk buffer checks
 		new PacketMovementAck(this, sequence);
 		m_pChar->m_dirFace = dir;
 		m_pChar->UpdateMove(ptOld, this);	// Who now sees me ?
