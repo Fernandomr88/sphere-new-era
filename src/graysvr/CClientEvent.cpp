@@ -746,16 +746,23 @@ bool CClient::Event_Walk(BYTE rawdir, BYTE sequence)
 		}
 
 		m_timeLastEventWalk = CServTime::GetCurrentTime();
-		m_iWalkStepCount++;					// Increase step count to use on walk buffer checks
 	}
 	else
 	{
+		if ( !Event_CheckWalkBuffer() )
+		{
+			new PacketMovementRej(this, sequence);
+			return false;
+		}
+
 		// Just a change in dir
-		m_iWalkStepCount++;					// Increase step count to use on walk buffer checks
 		new PacketMovementAck(this, sequence);
 		m_pChar->m_dirFace = dir;
 		m_pChar->UpdateMove(ptOld, this);	// Who now sees me ?
 	}
+
+	m_iWalkStepCount++;					// Increase step count to use on walk buffer checks
+
 	return true;
 }
 
