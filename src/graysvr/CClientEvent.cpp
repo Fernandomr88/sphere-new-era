@@ -588,60 +588,73 @@ bool CClient::Event_CheckWalkBuffer()
 	if ( (m_iWalkStepCount % 7) != 0 )	// only check when we have taken 8 steps
 		return true;
 
+	if ( m_pChar->IsStatFlag(STATF_Freeze)) {
+		return true;
+	}
+
 	// Client only allows 4 steps of walk ahead.
 	ULONGLONG CurrTime = GetTickCount64();
-	int iTimeDiff = static_cast<int>((CurrTime - m_timeWalkStep) / 10);
-	int iTimeMin = m_pChar->IsStatFlag(STATF_OnHorse|STATF_Hovering) ? 70 : 140; // minimum time to move 8 steps
 
-	if ( m_pChar->m_pPlayer && (m_pChar->m_pPlayer->m_speedMode != 0) )
-	{
-		// Speed Modes:
-		// 0 = Foot=Normal, Mount=Normal                         140 -  70
-		// 1 = Foot=Double Speed, Mount=Normal                    70 -  70    = 70
-		// 2 = Foot=Always Walk, Mount=Always Walk (Half Speed)  280 - 140    = x2
-		// 3 = Foot=Always Run, Mount=Always Walk                140 - 140    = 70|x2 (1|2)
-		// 4 = No Movement                                       N/A - N/A    = (handled by OnFreezeCheck)
+	if (m_mountOrHoveringLastCheck == m_pChar->IsStatFlag(STATF_OnHorse|STATF_Hovering)) {
+		int iTimeDiff = static_cast<int>((CurrTime - m_timeWalkStep) / 10);
+		int iTimeMin = m_pChar->IsStatFlag(STATF_OnHorse|STATF_Hovering) ? 70 : 140; // minimum time to move 8 steps
 
-		if ( m_pChar->m_pPlayer->m_speedMode & 0x1 )
-			iTimeMin = 70;
-		if ( m_pChar->m_pPlayer->m_speedMode & 0x2 )
-			iTimeMin *= 2;
-	}
-
-	if ( iTimeDiff > iTimeMin )
-	{
-		int	iRegen = ((iTimeDiff - iTimeMin) * g_Cfg.m_iWalkRegen) / 150;
-		if ( iRegen > g_Cfg.m_iWalkBuffer )
-			iRegen = g_Cfg.m_iWalkBuffer;
-		else if ( iRegen < -((g_Cfg.m_iWalkBuffer * g_Cfg.m_iWalkRegen) / 100) )
-			iRegen = -((g_Cfg.m_iWalkBuffer * g_Cfg.m_iWalkRegen) / 100);
-		iTimeDiff = iTimeMin + iRegen;
-	}
-
-	m_iWalkTimeAvg += iTimeDiff;
-	int	oldAvg = m_iWalkTimeAvg;
-	m_iWalkTimeAvg -= iTimeMin;
-
-	if ( m_iWalkTimeAvg > g_Cfg.m_iWalkBuffer )
-		m_iWalkTimeAvg = g_Cfg.m_iWalkBuffer;
-	else if ( m_iWalkTimeAvg < -g_Cfg.m_iWalkBuffer )
-		m_iWalkTimeAvg = -g_Cfg.m_iWalkBuffer;
-
-	if ( IsPriv(PRIV_DETAIL) && IsPriv(PRIV_DEBUG) )
-		SysMessagef("Walkcheck trace: %i / %i (%i) :: %i", iTimeDiff, iTimeMin, oldAvg, m_iWalkTimeAvg);
-
-	if ( (m_iWalkTimeAvg < 0) && (iTimeDiff >= 0) )	// TICK_PER_SEC
-	{
-		// Walking too fast.
-		DEBUG_WARN(("%s (%lx): Fast Walk ?\n", GetName(), GetSocketID()));
-		if ( IsTrigUsed(TRIGGER_USEREXWALKLIMIT) )
+		if ( m_pChar->m_pPlayer && (m_pChar->m_pPlayer->m_speedMode != 0) )
 		{
-			if ( m_pChar->OnTrigger(CTRIG_UserExWalkLimit, m_pChar) != TRIGRET_RET_TRUE )
-				return false;
+			// Speed Modes:
+			// 0 = Foot=Normal, Mount=Normal                         140 -  70
+			// 1 = Foot=Double Speed, Mount=Normal                    70 -  70    = 70
+			// 2 = Foot=Always Walk, Mount=Always Walk (Half Speed)  280 - 140    = x2
+			// 3 = Foot=Always Run, Mount=Always Walk                140 - 140    = 70|x2 (1|2)
+			// 4 = No Movement                                       N/A - N/A    = (handled by OnFreezeCheck)
+
+			if ( m_pChar->m_pPlayer->m_speedMode & 0x1 )
+				iTimeMin = 70;
+			if ( m_pChar->m_pPlayer->m_speedMode & 0x2 )
+				iTimeMin *= 2;
+		}
+
+		if ( iTimeDiff > iTimeMin )
+		{
+			int	iRegen = ((iTimeDiff - iTimeMin) * g_Cfg.m_iWalkRegen) / 150;
+			if ( iRegen > g_Cfg.m_iWalkBuffer )
+				iRegen = g_Cfg.m_iWalkBuffer;
+			else if ( iRegen < -((g_Cfg.m_iWalkBuffer * g_Cfg.m_iWalkRegen) / 100) )
+				iRegen = -((g_Cfg.m_iWalkBuffer * g_Cfg.m_iWalkRegen) / 100);
+			iTimeDiff = iTimeMin + iRegen;
+		} else if (iTimeDiff == iTimeMin) { //
+			iTimeDiff++; //
+		}
+
+		m_iWalkTimeAvg += iTimeDiff;
+		int	oldAvg = m_iWalkTimeAvg;
+		m_iWalkTimeAvg -= iTimeMin;
+
+		if ( m_iWalkTimeAvg > g_Cfg.m_iWalkBuffer )
+			m_iWalkTimeAvg = g_Cfg.m_iWalkBuffer;
+		else if ( m_iWalkTimeAvg < -g_Cfg.m_iWalkBuffer )
+			m_iWalkTimeAvg = -g_Cfg.m_iWalkBuffer;
+
+		if ( IsPriv(PRIV_DETAIL) && IsPriv(PRIV_DEBUG) )
+			SysMessagef("Walkcheck trace: %i / %i (%i) :: %i", iTimeDiff, iTimeMin, oldAvg, m_iWalkTimeAvg);
+
+		if ( (m_iWalkTimeAvg < 0) && (iTimeDiff >= 0) )	// TICK_PER_SEC
+		{
+			m_iWalkTimeAvg = g_Cfg.m_iWalkBuffer;
+			m_timeWalkStep = CurrTime;
+
+			// Walking too fast.
+			DEBUG_WARN(("%s (%lx): Fast Walk ?\n", GetName(), GetSocketID()));
+			if ( IsTrigUsed(TRIGGER_USEREXWALKLIMIT) )
+			{
+				if ( m_pChar->OnTrigger(CTRIG_UserExWalkLimit, m_pChar) != TRIGRET_RET_TRUE )
+					return false;
+			}
 		}
 	}
 
 	m_timeWalkStep = CurrTime;
+	m_mountOrHoveringLastCheck = m_pChar->IsStatFlag(STATF_OnHorse|STATF_Hovering);
 	return true;
 }
 
@@ -749,7 +762,7 @@ bool CClient::Event_Walk(BYTE rawdir, BYTE sequence)
 	}
 	else
 	{
-		if ( !Event_CheckWalkBuffer() )
+		if ( m_pChar->IsStatFlag(STATF_OnHorse|STATF_Hovering) && !Event_CheckWalkBuffer() )
 		{
 			new PacketMovementRej(this, sequence);
 			return false;
