@@ -1032,6 +1032,7 @@ private:
 	int	m_iWalkTimeAvg;
 	int m_iWalkStepCount;		// Count the actual steps . Turning does not count.
 	ULONGLONG m_timeWalkStep;	// the last %8 walk step time.
+	bool m_mountOrHoveringLastCheck;
 
 	// Screensize
 	struct __screensize

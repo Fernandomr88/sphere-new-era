@@ -588,7 +588,7 @@ bool CClient::Event_CheckWalkBuffer()
 	if ( (m_iWalkStepCount % 7) != 0 )	// only check when we have taken 8 steps
 		return true;
 
-	if ( m_pChar->IsStatFlag(STATF_Freeze)) {
+	if ( m_pChar->IsStatFlag(STATF_Freeze|STATF_Stone)) {
 		return true;
 	}
 
@@ -622,8 +622,8 @@ bool CClient::Event_CheckWalkBuffer()
 			else if ( iRegen < -((g_Cfg.m_iWalkBuffer * g_Cfg.m_iWalkRegen) / 100) )
 				iRegen = -((g_Cfg.m_iWalkBuffer * g_Cfg.m_iWalkRegen) / 100);
 			iTimeDiff = iTimeMin + iRegen;
-		} else if (iTimeDiff == iTimeMin) { //
-			iTimeDiff++; //
+		} else if (iTimeDiff == iTimeMin) {
+			iTimeDiff++;
 		}
 
 		m_iWalkTimeAvg += iTimeDiff;
@@ -685,12 +685,6 @@ bool CClient::Event_Walk(BYTE rawdir, BYTE sequence)
 	CPointMap pt = m_pChar->GetTopPoint();
 	CPointMap ptOld = pt;
 
-	if (!Event_CheckWalkBuffer())
-	{
-		new PacketMovementRej(this, sequence);
-		return false;
-	}
-
 	if ( dir == m_pChar->m_dirFace )
 	{
 		pt.Move(dir);
@@ -718,6 +712,12 @@ bool CClient::Event_Walk(BYTE rawdir, BYTE sequence)
 				new PacketMovementRej(this, sequence);
 				return false;
 			}
+		}
+
+		if ( !Event_CheckWalkBuffer() )
+		{
+			new PacketMovementRej(this, sequence);
+			return false;
 		}
 
 		// Check if invisible chars will be revealed
@@ -942,10 +942,16 @@ void CClient::Event_VendorBuy(CChar *pVendor, const VendorItem *items, size_t it
 			continue;
 		if ( IsSetOF(OF_PetSlots) )
 		{
-			CCharBase *pPetDef = CCharBase::FindCharBase(pItem->m_itFigurine.m_ID);
+			CREID_TYPE id = pItem->m_itFigurine.m_ID;
+			if ( !id )
+			{
+				id = CItemBase::FindCharTrack(pItem->GetID());
+			}
+
+			CCharBase *pPetDef = CCharBase::FindCharBase(id);
 			if ( pPetDef )
 			{
-				if ( !m_pChar->FollowersUpdate(pVendor, static_cast<short>(maximum(1, pPetDef->GetDefNum("FOLLOWERSLOTS")))) )
+				if ( !m_pChar->FollowersUpdate(pVendor, static_cast<short>(maximum(1, pPetDef->GetDefNum("FOLLOWERSLOTS"))), true) )
 				{
 					m_pChar->SysMessageDefault(DEFMSG_PETSLOTS_TRY_CONTROL);
 					return;
