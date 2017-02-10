@@ -1185,11 +1185,14 @@ void CClient::Event_VendorSell(CChar *pVendor, const VendorItem *items, size_t i
 		if ( pItem->GetTopLevelObj() != m_pChar )
 			continue;
 
-		// Find the valid sell item from vendors stuff.
+		// Find the valid sell item from vendors stuff. verisso
 		CItemVendable *pItemSell = CChar::NPC_FindVendableItem(pItem, pContBuy);
 		if ( !pItemSell )
+		{
+			if ( IsPriv(PRIV_DETAIL) && IsPriv(PRIV_DEBUG) )
+			SysMessagef("!pItemSell"; //debugging
 			continue;
-
+		}
 		// Now how much did i say i wanted to sell?
 		WORD amount = items[i].m_amount;
 		if ( pItem->GetAmount() < amount )	// selling more than I have?
