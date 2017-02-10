@@ -1190,7 +1190,7 @@ void CClient::Event_VendorSell(CChar *pVendor, const VendorItem *items, size_t i
 		if ( !pItemSell )
 		{
 			if ( IsPriv(PRIV_DETAIL) && IsPriv(PRIV_DEBUG) )
-			SysMessagef("!pItemSell"; //debugging
+			SysMessagef("!pItemSell"); //debugging
 			continue;
 		}
 		// Now how much did i say i wanted to sell?

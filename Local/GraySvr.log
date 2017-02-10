@@ -1,81 +1,17 @@
-﻿  Current build revision: -2395 (GIT hash: f34663b5)
-  threads.cpp
-  asyncdb.cpp
-  send.cpp
-  receive.cpp
-  packet.cpp
-  network.cpp
+﻿  Current build revision: -2393 (GIT hash: 781bca2a)
+  CClientEvent.cpp
+  Generating Code...
+  Compiling...
+  CObjBase.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
   ntwindow.cpp
   ntservice.cpp
   graysvr.cpp
-  CWorldMap.cpp
-  CWorldImport.cpp
   CWorld.cpp
   CWebPage.cpp
   CServer.cpp
   CServRef.cpp
   CResource.cpp
-  CParty.cpp
-  CObjBase.cpp
-  CLog.cpp
-  CItemVend.cpp
-  Generating Code...
-  Compiling...
-  CItemStone.cpp
-  CItemSpawn.cpp
-  CItemShip.cpp
-  CItemMultiCustom.cpp
-  CItemMulti.cpp
-  CItemBase.cpp
-  CItem.cpp
-  CGMPage.cpp
-  CContain.cpp
-  CClientUse.cpp
-  CClientTarg.cpp
-  CClientMsg.cpp
-  CClientLog.cpp
-  CClientGMPage.cpp
-  CClientEvent.cpp
-  CClientDialog.cpp
-  CClient.cpp
-  CChat.cpp
-  CCharUse.cpp
-  CCharStatus.cpp
-  Generating Code...
-  Compiling...
-  CCharSpell.cpp
-  CCharSkill.cpp
-  CCharNPCStatus.cpp
-  CCharNPCPet.cpp
-  CCharNPCAct.cpp
-  CCharNPC.cpp
-  CCharFight.cpp
-  CCharBase.cpp
-  CChar.cpp
-  CBase.cpp
-  CAccount.cpp
-  SQLite.cpp
-  ListDefContMap.cpp
-  CsvFile.cpp
-  CacheableScriptFile.cpp
-  CVarFloat.cpp
-  CVarDefMap.cpp
-  CSocket.cpp
-  CSectorTemplate.cpp
-  CScriptObj.cpp
-  Generating Code...
-  Compiling...
-  CScript.cpp
-  CResourceBase.cpp
-  CRegion.cpp
-  CRect.cpp
-  CQueue.cpp
-  CGrayMap.cpp
-  CGrayInst.cpp
-  CGrayData.cpp
-  CExpression.cpp
-  CException.cpp
-  CDataBase.cpp
-  Generating Code...
   GraySvr.vcxproj -> C:\Users\Fernando Rocha\Desktop\Source-master\Local\SphereSvr.exe
   GraySvr.vcxproj -> C:\Users\Fernando Rocha\Desktop\Source-master\Local\SphereSvr.pdb (Full PDB)
