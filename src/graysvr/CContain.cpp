@@ -1372,7 +1372,7 @@ void CItemContainer::Restock()
 				case LAYER_BANKBOX:
 					// Restock petty cash.
 					if ( !m_itEqBankBox.m_Check_Restock )
-						m_itEqBankBox.m_Check_Restock = 500000;
+						m_itEqBankBox.m_Check_Restock = g_Cfg.m_iVendorMaxGp;
 					if ( m_itEqBankBox.m_Check_Amount < m_itEqBankBox.m_Check_Restock )
 						m_itEqBankBox.m_Check_Amount = m_itEqBankBox.m_Check_Restock;
 					return;

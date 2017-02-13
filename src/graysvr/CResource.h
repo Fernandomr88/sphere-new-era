@@ -795,6 +795,7 @@ public:
 	DWORD m_iBankIMax;			// Maximum number of items allowed in bank.
 	int  m_iBankWMax;			// Maximum weight in WEIGHT_UNITS stones allowed in bank.
 	int  m_iVendorMaxSell;		// Max things a vendor will sell in one shot.
+	unsigned int  m_iVendorMaxGp;		// Max gp a vendor can carry and pay for an item.
 	unsigned int  m_iMaxCharComplexity;		// How many chars per sector.
 	unsigned int  m_iMaxItemComplexity;		// How many items per meter.
 	unsigned int  m_iMaxSectorComplexity;	// How many items per sector.
