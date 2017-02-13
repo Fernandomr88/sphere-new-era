@@ -1129,7 +1129,7 @@ void CClient::Event_VendorBuy(CChar *pVendor, const VendorItem *items, size_t it
 
 	// Close vendor gump
 	addVendorClose(pVendor);
-	//addSound(SOUND_DROP_GOLD1);
+	addSound(SOUND_DROP_GOLD1);
 }
 
 void CClient::Event_VendorSell_Cheater(int iCode)
@@ -1255,8 +1255,8 @@ void CClient::Event_VendorSell(CChar *pVendor, const VendorItem *items, size_t i
 			m_pChar->AddGoldToPack(iGold, NULL, false);
 
 		addVendorClose(pVendor);
-		//addSound(SOUND_DROP_GOLD1);
-		//addSound(SOUND_DROP_GOLD2);
+		addSound(SOUND_DROP_GOLD1);
+		addSound(SOUND_DROP_GOLD2);
 	}
 	else
 	{

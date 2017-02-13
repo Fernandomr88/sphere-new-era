@@ -203,7 +203,7 @@ bool CItemVendable::IsValidSaleItem( bool fBuyFromVendor ) const
 	if ( ! fBuyFromVendor )
 	{
 		// cannot sell these to a vendor.
-		if ( IsAttr(ATTR_NEWBIE|ATTR_MOVE_NEVER)) && (!IsType(IT_DEED))
+		if (( IsAttr(ATTR_NEWBIE|ATTR_MOVE_NEVER)) && (!IsType(IT_DEED)))
 			return( false );	// spellbooks !
 	}
 	if ( IsType(IT_COIN))
