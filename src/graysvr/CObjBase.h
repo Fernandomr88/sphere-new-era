@@ -592,13 +592,10 @@ public:
 		} m_itSpell;
 
 		// IT_SPELLBOOK
-		struct	// Spellbook extra spells.
+		struct
 		{
 			DWORD m_spells1;	// more1=Mask of avail spells for spell book.
 			DWORD m_spells2;	// more2=Mask of avail spells for spell book.
-			WORD m_maxspells;	// morex = max amount of spells.
-			WORD m_junk1;
-			WORD m_baseid;		// morez
 		} m_itSpellbook;
 
 		// IT_POTION
