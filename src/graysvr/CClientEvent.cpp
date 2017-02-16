@@ -597,15 +597,15 @@ bool CClient::Event_CheckWalkBuffer()
 
 	if (m_mountOrHoveringLastCheck == m_pChar->IsStatFlag(STATF_OnHorse|STATF_Hovering)) {
 		int iTimeDiff = static_cast<int>((CurrTime - m_timeWalkStep) / 10);
-		int iTimeMin = m_pChar->IsStatFlag(STATF_OnHorse|STATF_Hovering) ? 70 : 140; // minimum time to move 8 steps
+		int iTimeMin = m_pChar->IsStatFlag(STATF_OnHorse|STATF_Hovering) ? 70 : 120; // minimum time to move 8 steps
 
 		if ( m_pChar->m_pPlayer && (m_pChar->m_pPlayer->m_speedMode != 0) )
 		{
 			// Speed Modes:
-			// 0 = Foot=Normal, Mount=Normal                         140 -  70
+			// 0 = Foot=Normal, Mount=Normal                         120 -  70
 			// 1 = Foot=Double Speed, Mount=Normal                    70 -  70    = 70
-			// 2 = Foot=Always Walk, Mount=Always Walk (Half Speed)  280 - 140    = x2
-			// 3 = Foot=Always Run, Mount=Always Walk                140 - 140    = 70|x2 (1|2)
+			// 2 = Foot=Always Walk, Mount=Always Walk (Half Speed)  240 - 120    = x2
+			// 3 = Foot=Always Run, Mount=Always Walk                120 - 120    = 70|x2 (1|2)
 			// 4 = No Movement                                       N/A - N/A    = (handled by OnFreezeCheck)
 
 			if ( m_pChar->m_pPlayer->m_speedMode & 0x1 )
