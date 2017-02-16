@@ -3625,8 +3625,7 @@ public:
 	}
 	WORD Skill_GetAdjusted(SKILL_TYPE skill) const;
 	SKILL_TYPE Skill_GetMagicRandom(WORD iMinValue = 0);
-	SKILL_TYPE Skill_GetMagicBest();
-
+	
 	/**
 	* @brief Checks if the given skill can be used.
 	*
