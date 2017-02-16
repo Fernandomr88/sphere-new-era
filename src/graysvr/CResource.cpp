@@ -89,7 +89,7 @@ CResource::CResource()
 	m_fCharTags			= false;
 	m_fVendorTradeTitle	= true;
 	m_iVendorMaxSell	= 255;
-	m_iVendorMaxGp	= 10000; //max Gp vendor carries. This means max value vendor can pay for an item.
+	//m_iVendorMaxGp	= 10000; //max Gp vendor carries. This means max value vendor can pay for an item.
 	m_iGameMinuteLength	= 20*TICK_PER_SEC;
 	m_fNoWeather		= true;
 	m_fFlipDroppedItems	= true;
@@ -575,7 +575,7 @@ enum RC_TYPE
 	RC_USENOCRYPT,				// m_Usenocrypt
 	RC_USEPACKETPRIORITY,		// m_fUsePacketPriorities
 	RC_VENDORMAXSELL,			// m_iVendorMaxSell
-	RC_VENDORMAXGP				// m_iVendorMaxGp
+	//RC_VENDORMAXGP,				// m_iVendorMaxGp
 	RC_VENDORTRADETITLE,		// m_fVendorTradeTitle
 	RC_VERSION,
 	RC_WALKBUFFER,
@@ -805,7 +805,7 @@ const CAssocReg CResource::sm_szLoadKeys[RC_QTY+1] =
 	{ "USENOCRYPT",				{ ELEM_BOOL,	OFFSETOF(CResource,m_fUsenocrypt),			0 }},	// we don't want no-crypt clients
 	{ "USEPACKETPRIORITY",		{ ELEM_BOOL,	OFFSETOF(CResource,m_fUsePacketPriorities),	0 }},
 	{ "VENDORMAXSELL",			{ ELEM_INT,		OFFSETOF(CResource,m_iVendorMaxSell),		0 }},
-	{ "VENDORMAXGP",			{ ELEM_INT,		OFFSETOF(CResource,m_iVendorMaxGp),			0 }},
+	//{ "VENDORMAXGP",			{ ELEM_INT,		OFFSETOF(CResource,m_iVendorMaxGp),			0 }},
 	{ "VENDORTRADETITLE",		{ ELEM_BOOL,	OFFSETOF(CResource,m_fVendorTradeTitle),	0 }},
 	{ "VERSION",				{ ELEM_VOID,	0,											0 }},
 	{ "WALKBUFFER",				{ ELEM_INT,		OFFSETOF(CResource,m_iWalkBuffer),			0 }},

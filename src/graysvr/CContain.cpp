@@ -1335,6 +1335,7 @@ void CItemContainer::Restock()
 	{
 		// Part of a vendor.
 		CChar *pChar = dynamic_cast<CChar *>(GetParent());
+
 		if ( pChar && !pChar->IsStatFlag(STATF_Pet) )
 		{
 			switch ( GetEquipLayer() )
@@ -1368,11 +1369,12 @@ void CItemContainer::Restock()
 					}
 				}
 				break;
-
+				
 				case LAYER_BANKBOX:
 					// Restock petty cash.
-					if ( !m_itEqBankBox.m_Check_Restock )
-						m_itEqBankBox.m_Check_Restock = g_Cfg.m_iVendorMaxGp;
+					
+					if (!m_itEqBankBox.m_Check_Restock)
+						m_itEqBankBox.m_Check_Restock = 10000;
 					if ( m_itEqBankBox.m_Check_Amount < m_itEqBankBox.m_Check_Restock )
 						m_itEqBankBox.m_Check_Amount = m_itEqBankBox.m_Check_Restock;
 					return;
