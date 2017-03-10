@@ -52,14 +52,14 @@ int CResource::Calc_CombatAttackSpeed( CChar * pChar, CItem * pWeapon )
 			{
 				int iSwingSpeed = maximum(1, (pChar->Stat_GetAdjusted(STAT_DEX) + 100) * iBaseSpeed);
 				iSwingSpeed = (g_Cfg.m_iSpeedScaleFactor * TICK_PER_SEC) / iSwingSpeed;
-				if ( iSwingSpeed < 5 )
-					iSwingSpeed = 5;
+				if ( iSwingSpeed < 8 )
+					iSwingSpeed = 8;
 				return iSwingSpeed;
 			}
 
 			int iSwingSpeed = IMULDIV(100 - pChar->Stat_GetAdjusted(STAT_DEX), 40, 100);	// base speed is just the char DEX range (0 ~ 40)
-			if ( iSwingSpeed < 5 )
-				iSwingSpeed = 5;
+			if ( iSwingSpeed < 8 )
+				iSwingSpeed = 8;
 			else
 				iSwingSpeed += 5;
 
@@ -80,8 +80,8 @@ int CResource::Calc_CombatAttackSpeed( CChar * pChar, CItem * pWeapon )
 			// pre-AOS formula	(default m_iSpeedScaleFactor = 15000)
 			int iSwingSpeed = maximum(1, (pChar->Stat_GetVal(STAT_DEX) + 100) * iBaseSpeed);
 			iSwingSpeed = (g_Cfg.m_iSpeedScaleFactor * TICK_PER_SEC) / iSwingSpeed;
-			if ( iSwingSpeed < 1 )
-				iSwingSpeed = 1;
+			if ( iSwingSpeed < 8 )
+				iSwingSpeed = 8;
 			return iSwingSpeed;
 		}
 
@@ -101,8 +101,8 @@ int CResource::Calc_CombatAttackSpeed( CChar * pChar, CItem * pWeapon )
 			// SE formula		(default m_iSpeedScaleFactor = 80000)
 			int iSwingSpeed = maximum(1, iBaseSpeed * (100 + iSwingSpeedIncrease) / 100);
 			iSwingSpeed = (g_Cfg.m_iSpeedScaleFactor / ((pChar->Stat_GetVal(STAT_DEX) + 100) * iSwingSpeed)) - 2;	// get speed in ticks of 0.25s each
-			if ( iSwingSpeed < 5 )
-				iSwingSpeed = 5;
+			if ( iSwingSpeed < 8 )
+				iSwingSpeed = 8;
 			iSwingSpeed = (iSwingSpeed * TICK_PER_SEC) / 4;		// convert 0.25s ticks into ms
 			return iSwingSpeed;
 		}
@@ -111,8 +111,8 @@ int CResource::Calc_CombatAttackSpeed( CChar * pChar, CItem * pWeapon )
 		{
 			// ML formula		(doesn't use m_iSpeedScaleFactor and it's only compatible with ML speed format eg. 0.25 ~ 5.00 instead 0 ~ 50)
 			int iSwingSpeed = ((iBaseSpeed * 4) - (pChar->Stat_GetVal(STAT_DEX) / 30)) * (100 / (100 + iSwingSpeedIncrease));	// get speed in ticks of 0.25s each
-			if ( iSwingSpeed < 5 )
-				iSwingSpeed = 5;
+			if ( iSwingSpeed < 8 )
+				iSwingSpeed = 8;
 			iSwingSpeed = (iSwingSpeed * TICK_PER_SEC) / 4;		// convert 0.25s ticks into ms
 			return iSwingSpeed;
 		}

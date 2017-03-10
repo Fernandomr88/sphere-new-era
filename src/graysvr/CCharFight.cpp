@@ -2304,6 +2304,11 @@ int CChar::Fight_CalcDamage( const CItem * pWeapon, bool bNoRandom, bool bGetMax
 				iDmgBonus += Stat_GetAdjusted(iStatBonus) * iStatBonusPercent / 100;
 				break;
 			}
+
+			case 3:
+			{
+				break;
+			}
 		}
 
 		iDmgMin += iDmgMin * iDmgBonus / 100;
