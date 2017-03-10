@@ -1,14 +1,25 @@
-﻿  Current build revision: -2386 (GIT hash: 439f014d)
+﻿  Current build revision: -2375 (GIT hash: e44f96ba)
+  send.cpp
+  receive.cpp
+  network.cpp
+  CResourceCalc.cpp
   CResource.cpp
-  CContain.cpp
+  CObjBase.cpp
+  CItem.cpp
+  CClientMsg.cpp
+  CClientEvent.cpp
+  CCharact.cpp
+  CCharStatus.cpp
+  CCharSkill.cpp
+  CCharNPCAct.cpp
+  CCharFight.cpp
+  CChar.cpp
+  CAccount.cpp
   Generating Code...
   Compiling...
   threads.cpp
   asyncdb.cpp
-  send.cpp
-  receive.cpp
   packet.cpp
-  network.cpp
   ntwindow.cpp
   ntservice.cpp
   graysvr.cpp
@@ -20,55 +31,43 @@
   CServRef.cpp
   CSector.cpp
   CResourceDef.cpp
-  CResourceCalc.cpp
   CPathFinder.cpp
   CParty.cpp
-  Generating Code...
-  Compiling...
-  CObjBase.cpp
   CLog.cpp
   CItemVend.cpp
   CItemStone.cpp
   CItemSpawn.cpp
+  Generating Code...
+  Compiling...
   CItemShip.cpp
   CItemMultiCustom.cpp
   CItemMulti.cpp
   CItemBase.cpp
-  CItem.cpp
   CGMPage.cpp
+  CContain.cpp
   CClientUse.cpp
   CClientTarg.cpp
-  CClientMsg.cpp
   CClientLog.cpp
   CClientGMPage.cpp
-  CClientEvent.cpp
   CClientDialog.cpp
   CClient.cpp
   CChat.cpp
-  Generating Code...
-  Compiling...
-  CCharact.cpp
   CCharUse.cpp
-  CCharStatus.cpp
   CCharSpell.cpp
-  CCharSkill.cpp
   CCharNPCStatus.cpp
   CCharNPCPet.cpp
-  CCharNPCAct.cpp
   CCharNPC.cpp
-  CCharFight.cpp
   CCharBase.cpp
-  CChar.cpp
   CBase.cpp
-  CAccount.cpp
+  Generating Code...
+  Compiling...
   SQLite.cpp
+  graycom.cpp
   ListDefContMap.cpp
   CsvFile.cpp
   CacheableScriptFile.cpp
   CVarFloat.cpp
   CVarDefMap.cpp
-  Generating Code...
-  Compiling...
   CSocket.cpp
   CSectorTemplate.cpp
   CScriptObj.cpp
@@ -82,6 +81,9 @@
   CGrayData.cpp
   CExpression.cpp
   CException.cpp
+  Generating Code...
+  Compiling...
+  CEncrypt.cpp
   CDataBase.cpp
   Generating Code...
   GraySvr.vcxproj -> C:\Users\Fernando Rocha\Desktop\Source-master\Local\SphereSvr.exe
