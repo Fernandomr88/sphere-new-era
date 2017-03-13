@@ -135,8 +135,10 @@ bool CClient::addLoginErr(BYTE code)
 			break;
 	}
 
-	new PacketLoginError(this, static_cast<PacketLoginError::Reason>(code));
-	m_NetState->markReadClosed();
+	if ( m_NetState->m_clientVersion || m_NetState->m_reportedVersion )		// only reply the packet to valid clients
+ 		new PacketLoginError(this, static_cast<PacketLoginError::Reason>(code));
+ 
+ 	m_NetState->markReadClosed();
 	return( false );
 }
 
