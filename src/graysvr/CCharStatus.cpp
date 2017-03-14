@@ -2201,7 +2201,7 @@ CRegionBase *CChar::CheckValidMove( CPointBase &ptDest, WORD *pwBlockFlags, DIR_
 		{
 			if ( !(wBlockFlags & CAN_I_CLIMB) ) // we can climb anywhere
 			{
-				WARNWALK(("block.m_Lowest.m_z %d  block.m_Bottom.m_z %d  block.m_Top.m_z %d\n", block.m_Lowest.m_z, block.m_Bottom.m_z, block.m_Top.m_z));
+				WARNWALK(("block.m_Lowest.m_z %d  block.m_Bottom.m_z %d  block.m_Top.m_z %d block.m_Bottom.m_dwTile 0x%lx block.m_Lowest.m_dwTile 0x%lx\n", block.m_Lowest.m_z, block.m_Bottom.m_z, block.m_Top.m_z, block.m_Lowest.m_dwTile));
 				if ( block.m_Bottom.m_dwTile < TERRAIN_QTY )
 				{
 					// Stepping on map terrain
@@ -2210,6 +2210,8 @@ CRegionBase *CChar::CheckValidMove( CPointBase &ptDest, WORD *pwBlockFlags, DIR_
 				}
 				else
 				{
+					WARNWALK(("Stepping on dynamic item block.m_Bottom.m_z %d ptDest.m_z %d m_zClimbHeight %d \n", block.m_Bottom.m_z, ptDest.m_z, m_zClimbHeight));
+
 					// Stepping on dynamic item
 					if ( block.m_Bottom.m_z > ptDest.m_z + m_zClimbHeight + 2 )
 						return NULL;

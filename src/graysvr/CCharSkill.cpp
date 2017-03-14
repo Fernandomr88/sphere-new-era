@@ -990,7 +990,7 @@ bool CChar::Skill_CheckSuccess( SKILL_TYPE skill, int difficulty, bool bUseBellC
 
 	difficulty *= 10;
 	int iSuccessChance = difficulty;
-	if ( bUseBellCurve )
+	if ( skill != SKILL_PARRYING )
 		iSuccessChance = Calc_GetSCurve( Skill_GetAdjusted(skill) - difficulty, SKILL_VARIANCE );
 
 	return( iSuccessChance >= Calc_GetRandVal(1000) );
