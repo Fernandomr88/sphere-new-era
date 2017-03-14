@@ -21,7 +21,7 @@
 #ifdef DEBUGWALKSTUFF
 	#define WARNWALK(_x_)		g_pLog->EventWarn _x_;
 #else
-	#define WARNWALK(_x_)		if ( g_Cfg.m_wDebugFlags & DEBUGF_WALK ) { g_pLog->EventWarn _x_; }
+	#define WARNWALK(_x_)		if ( g_Cfg.m_wDebugFlags & DEBUGF_WALK && m_pPlayer ) { g_pLog->EventWarn _x_; }
 #endif
 
 #include "../common/graycom.h"
