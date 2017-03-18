@@ -1066,10 +1066,19 @@ bool CChar::NPC_LookAtCharHuman( CChar * pChar )
 	// Yell for guard if we see someone evil.
 	if ( NPC_CanSpeak() && m_pArea->IsGuarded() && !Calc_GetRandVal(3) )
 	{
-		Speak(pChar->IsStatFlag(STATF_Criminal) ? g_Cfg.GetDefaultMsg(DEFMSG_NPC_GENERIC_SEECRIM) : g_Cfg.GetDefaultMsg(DEFMSG_NPC_GENERIC_SEEMONS));
 
-		// Find a guard.
-		CallGuards(pChar);
+		if ( Noto_IsEvil())		// I am evil.
+		{
+			// Attack others if we are evil.
+			return( NPC_LookAtCharMonster(pChar));
+		}
+
+		if ( ! Noto_IsEvil() )
+		{
+			Speak(pChar->IsStatFlag(STATF_Criminal) ? g_Cfg.GetDefaultMsg(DEFMSG_NPC_GENERIC_SEECRIM) : g_Cfg.GetDefaultMsg(DEFMSG_NPC_GENERIC_SEEMONS));
+			CallGuards(pChar); 	// Find a guard.
+		}
+
 		if ( IsStatFlag(STATF_War) )
 			return false;
 
