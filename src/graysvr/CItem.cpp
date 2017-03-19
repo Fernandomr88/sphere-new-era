@@ -475,7 +475,7 @@ CItem * CItem::ReadTemplate( CResourceLock & s, CObjBase * pCont ) // static
 					}
 				}
 				continue;
-	
+
 			case ITC_CONTAINER:
 				fItemAttrib = false;
 				{
@@ -497,7 +497,7 @@ CItem * CItem::ReadTemplate( CResourceLock & s, CObjBase * pCont ) // static
 					}
 				}
 				continue;
-	
+
 			case ITC_ITEM:
 			case ITC_ITEMNEWBIE:
 				fItemAttrib = false;
@@ -534,7 +534,7 @@ bool CItem::IsTopLevelMultiLocked() const
 	ASSERT( IsTopLevel());
 	if ( ! m_uidLink.IsValidUID())	// linked to something.
 		return( false );
-	if ( IsType(IT_KEY))	// keys cannot be locked down. 
+	if ( IsType(IT_KEY))	// keys cannot be locked down.
 		return( false );
 	const CRegionBase * pArea = GetTopPoint().GetRegion( REGION_TYPE_MULTI );
 	if ( pArea == NULL )
@@ -938,7 +938,7 @@ CItem * CItem::UnStackSplit( WORD amount, CChar * pCharSrc )
 	// can be 0 size if on vendor.
 	// ARGS:
 	//  amount = the amount that i want to set this pile to
-	// RETURN: 
+	// RETURN:
 	//  The newly created item.
 
 	if ( amount >= GetAmount() )
@@ -1184,31 +1184,39 @@ SOUND_TYPE CItem::GetDropSound(const CObjBase *pObjOn) const
 	if ( iSnd )
 		return iSnd;
 
-	if ( IsType(IT_GOLD) || IsType(IT_COIN) )
+	switch (GetType())
 	{
-		WORD iAmount = GetAmount();
-		if ( iAmount <= 1 )
-			return SOUND_DROP_MONEY1;
-		else if ( iAmount <= 5 )
-			return SOUND_DROP_MONEY2;
-		else
-			return SOUND_DROP_MONEY3;
+		case IT_COIN:
+		case IT_GOLD:
+			// depends on amount.
+			switch (GetAmount())
+			{
+				case 1: iSnd = 0x035; break;
+				case 2: iSnd = 0x032; break;
+				case 3:
+				case 4:	iSnd = 0x036; break;
+				default: iSnd = 0x037;
+			}
+			break;
+		case IT_GEM:
+			iSnd = (( GetID() > ITEMID_GEMS ) ? 0x034 : 0x032 );  // Small vs Large Gems
+			break;
+		case IT_INGOT:  // Any Ingot
+			if ( pObjOn == NULL )
+			{
+				iSnd = 0x033;
+			}
+			break;
+
+		default:
+			break;
 	}
 
-	// Try get drop sound from container
-	if ( pObjOn )
-	{
-		const CItemContainer *pCont = dynamic_cast<const CItemContainer *>(pObjOn);
-		if ( pCont )
-		{
-			iSnd = pCont->GetDropSound();
-			if ( iSnd )
-				return iSnd;
-		}
-	}
-
-	// Use default sound if nothing was found
-	return SOUND_HAMMER;
+	// normal drop sound for what dropped in/on.
+	if ( iSnd == 0 )
+		return( pObjOn ? 0x057 : 0x042 );
+	else
+		return ( iSnd );
 }
 
 bool CItem::MoveTo(CPointMap pt, bool bForceFix) // Put item on the ground here.
@@ -1307,7 +1315,7 @@ bool CItem::MoveNearObj( const CObjBaseTemplate *pObj, WORD iSteps )
 		pPack->ContentAdd(this, pObj->GetContainedPoint());
 		return true;
 	}
-	else 
+	else
 	{
 		// Equipped or on the ground so put on ground nearby.
 		return CObjBase::MoveNearObj(pObj, iSteps);
@@ -1421,7 +1429,7 @@ LPCTSTR CItem::GetNameFull( bool fIdentified ) const
 		}
 		if ( fTitleSet )
 		{
-			if ( fSingular && !IsSetOF(OF_NoPrefix) ) 
+			if ( fSingular && !IsSetOF(OF_NoPrefix) )
 				len = strcpylen( pTemp, Str_GetArticleAndSpace(pszTitle));
 			len += strcpylen( pTemp+len, pszTitle );
 		}
@@ -1561,7 +1569,7 @@ LPCTSTR CItem::GetNameFull( bool fIdentified ) const
 			break;
 	}
 
-	
+
 	if ( IsAttr(ATTR_STOLEN))
 	{
 		// Who is it stolen from ?
@@ -1653,7 +1661,7 @@ bool CItem::SetBase( CItemBase * pItemDef )
 
 	m_BaseRef.SetRef(pItemDef);
 	m_weight = pItemDef->GetWeight();
-	
+
 	// matex (moved here from constructor so armor/dam is copied too when baseid changes!)
 	m_attackBase = pItemDef->m_attackBase;
 	m_attackRange = pItemDef->m_attackRange;
@@ -1752,7 +1760,7 @@ void CItem::SetAmount( WORD amount )
 		ASSERT( IsItemEquipped() || IsItemInContainer());
 		pParentCont->OnWeightChange(GetWeight(amount) - GetWeight(oldamount));
 	}
-	
+
 	UpdatePropertyFlag(AUTOTOOLTIP_FLAG_AMOUNT);
 }
 
@@ -1994,7 +2002,7 @@ bool CItem::LoadSetContainer( CGrayUID uid, LAYER_TYPE layer )
 	}
 	else
 	{
-		CChar * pChar = dynamic_cast <CChar *> (pObjCont); 
+		CChar * pChar = dynamic_cast <CChar *> (pObjCont);
 		if ( pChar != NULL )
 		{
 			// equip the item
@@ -2175,7 +2183,7 @@ bool CItem::r_WriteVal( LPCTSTR pszKey, CGString & sVal, CTextConsole * pSrc )
 			{
 				CVarDefCont * pVar = GetDefKey(pszKey, true);
 				sVal.FormatLLVal(pVar ? pVar->GetValNum() : 0);
-			}	
+			}
 			break;
 		case IC_MAXAMOUNT:
 			{
@@ -2518,7 +2526,7 @@ bool CItem::r_LoadVal( CScript & s ) // Load an item Script
 					pt.m_map = 0; pt.m_z = 0;
 					TCHAR * ppVal[2];
 					size_t iArgs = Str_ParseCmds( pszTemp, ppVal, COUNTOF( ppVal ), " ,\t" );
-					if ( iArgs < 2 ) 
+					if ( iArgs < 2 )
 					{
 						DEBUG_ERR(( "Bad CONTP usage (not enough parameters)\n" ));
 						return false;
@@ -2653,11 +2661,11 @@ bool CItem::r_LoadVal( CScript & s ) // Load an item Script
 							break;
 					}
 				}
-				if ( iArgs < 2 ) 
+				if ( iArgs < 2 )
 				{
 					pt.InitPoint();
 				}
-				
+
 				m_itNormal.m_morep = pt;
 				// m_itNormal.m_morep = g_Cfg.GetRegionPoint( s.GetArgStr() );
 			}
@@ -2790,7 +2798,7 @@ bool CItem::r_Verb( CScript & s, CTextConsole * pSrc ) // Execute command from s
 		case CIV_DUPE:
 			{
 				int iCount = s.GetArgVal();
-				if ( iCount <= 0 ) 
+				if ( iCount <= 0 )
 					iCount = 1;
 				if ( !GetParentObj() && (static_cast<unsigned int>(iCount) > g_Cfg.m_iMaxItemComplexity) )	// if top-level, obey the complexity
 					iCount = g_Cfg.m_iMaxItemComplexity;
@@ -3165,7 +3173,7 @@ void CItem::DupeCopy( const CItem * pItem )
 	m_itNormal.m_more1 = pItem->m_itNormal.m_more1;
 	m_itNormal.m_more2 = pItem->m_itNormal.m_more2;
 	m_itNormal.m_morep = pItem->m_itNormal.m_morep;
-	
+
 	m_TagDefs.Copy(&(pItem->m_TagDefs));
 	m_BaseDefs.Copy(&(pItem->m_BaseDefs));
 	m_OEvents.Copy(&(pItem->m_OEvents));
@@ -3391,7 +3399,7 @@ int CItem::GetSpellcountInBook() const
 	CItemBase *pItemDef = Item_GetDef();
 	if ( !pItemDef )
 		return -1;
-	
+
 	WORD min = pItemDef->m_ttSpellbook.m_Offset + 1;
  	WORD max = pItemDef->m_ttSpellbook.m_Offset + pItemDef->m_ttSpellbook.m_MaxSpells;
 
@@ -5058,7 +5066,7 @@ bool CItem::OnTick()
 
 	EXC_SET("default behaviour4");
 	DEBUG_ERR(("Timer expired without DECAY flag '%s' (UID=0%lx)?\n", GetName(), static_cast<DWORD>(GetUID())));
-	
+
 #ifndef _WIN32
 	}
 #ifndef _DEBUG
@@ -5077,7 +5085,7 @@ bool CItem::OnTick()
 #endif
 #else
 	EXC_CATCH;
-	
+
 	EXC_DEBUG_START;
 	g_Log.EventDebug("'%s' item [0%lx]\n", GetName(), static_cast<DWORD>(GetUID()));
 	EXC_DEBUG_END;
