@@ -453,10 +453,10 @@ void CChar::Noto_ChangeDeltaMsg( int iDelta, LPCTSTR pszType )
 	int iDegree = minimum(abs(iDelta) / NOTO_FACTOR, 7);
 
 	TCHAR *pszMsg = Str_GetTemp();
-	sprintf( pszMsg, g_Cfg.GetDefaultMsg( DEFMSG_MSG_NOTO_CHANGE_0 ), 
+	sprintf( pszMsg, g_Cfg.GetDefaultMsg( DEFMSG_MSG_NOTO_CHANGE_0 ),
 		( iDelta < 0 ) ? g_Cfg.GetDefaultMsg( DEFMSG_MSG_NOTO_CHANGE_LOST ) : g_Cfg.GetDefaultMsg( DEFMSG_MSG_NOTO_CHANGE_GAIN ),
 		 g_Cfg.GetDefaultMsg(sm_DegreeTable[iDegree]), pszType );
-	
+
 	SysMessage( pszMsg );
 }
 
@@ -643,8 +643,8 @@ void CChar::Noto_Kill(CChar * pKill, bool fPetKill, int iTotalKillers)
 	Noto_ChangeNewMsg(iPrvLevel);	// inform any title changes
 }
 
-int CChar::NotoSave() 
-{ 
+int CChar::NotoSave()
+{
 	ADDTOCALLSTACK("CChar::NotoSave");
 	return static_cast<int>(m_notoSaves.size());
 }
@@ -780,7 +780,7 @@ int CChar::NotoSave_GetID( CChar * pChar )
 }
 
 bool CChar::NotoSave_Delete( CChar * pChar )
-{		
+{
 	ADDTOCALLSTACK("CChar::NotoSave_Delete");
 	if ( ! pChar )
 		return false;
@@ -829,7 +829,7 @@ bool CChar::Memory_UpdateFlags( CItemMemory * pMemory )
 		iCheckTime = 5*60*TICK_PER_SEC;
 	else
 		iCheckTime = 20*60*TICK_PER_SEC;
-	pMemory->SetTimeout( iCheckTime );	// update it's decay time.	
+	pMemory->SetTimeout( iCheckTime );	// update it's decay time.
 	CChar * pCharLink = pMemory->m_uidLink.CharFind();
 	if (pCharLink)
 	{
@@ -1053,7 +1053,7 @@ void CChar::OnNoticeCrime( CChar * pCriminal, const CChar * pCharMark )
 		if (IsTrigUsed(TRIGGER_SEECRIME))
 		{
 			CScriptTriggerArgs Args;
-			Args.m_iN1 = bCriminal; 
+			Args.m_iN1 = bCriminal;
 			Args.m_pO1 = const_cast<CChar*>(pCharMark);
 			OnTrigger(CTRIG_SeeCrime, pCriminal, &Args);
 			bCriminal = Args.m_iN1 ? true : false;
@@ -1600,7 +1600,7 @@ bool CChar::OnAttackedBy( CChar * pCharSrc, int iHarmQty, bool fCommandPet, bool
 	{
 		if ( m_pClient )	// I decide if this is a crime.
 			OnNoticeCrime( pCharSrc, this );
-		else		
+		else
 		{
 			// If it is a pet then this a crime others can report.
 			CChar * pCharMark = IsStatFlag(STATF_Pet) ? NPC_PetGetOwner() : this;
@@ -1767,10 +1767,14 @@ WORD CChar::CalcArmorDefense() const
 			case LAYER_HAND2:
 				if ( pItem->IsType(IT_SHIELD) )
 				{
-					if ( IsSetCombatFlags(COMBAT_STACKARMOR) )
+					if (IsSetCombatFlags(COMBAT_STACKARMOR))
+					{
 						ArmorRegionMax[ARMOR_HANDS] += iDefense;
+					}
 					else
-						ArmorRegionMax[ARMOR_HANDS] = maximum(ArmorRegionMax[ARMOR_HANDS], iDefense);
+					{
+						iDefenseTotal += (iDefense) * (Skill_GetAdjusted(SKILL_PARRYING) / 10);
+					}
 				}
 				break;
 			case LAYER_SPELL_Protection:
@@ -2684,7 +2688,7 @@ int CChar::Attacker_GetID( CChar * pChar )
 			continue;
 		if ( pMe == pChar )
 			return count;
-	
+
 		count++;
 	}
 	return -1;
@@ -2720,7 +2724,7 @@ bool CChar::Attacker_Delete( int index, bool bForced, ATTACKER_CLEAR_TYPE type )
 	CChar *pChar = static_cast<CGrayUID>(refAttacker.charUID).CharFind();
 	if ( !pChar )
 		return false;
-	
+
 	if ( IsTrigUsed(TRIGGER_COMBATDELETE) )
 	{
 		CScriptTriggerArgs Args;
@@ -2751,7 +2755,7 @@ bool CChar::Attacker_Delete( int index, bool bForced, ATTACKER_CLEAR_TYPE type )
 
 // Removing pChar from list
 bool CChar::Attacker_Delete(CChar *pChar, bool bForced, ATTACKER_CLEAR_TYPE type)
-{		
+{
 	ADDTOCALLSTACK("CChar::Attacker_Delete(CChar)");
 	return Attacker_Delete(Attacker_GetID(pChar), bForced, type);
 }
@@ -3213,7 +3217,7 @@ WAR_SWING_TYPE CChar::Fight_Hit( CChar * pCharTarg )
 
 	// Calculate base damage
 	int	iDmg = Fight_CalcDamage(pWeapon);
-	
+
 	CScriptTriggerArgs Args(iDmg, iTyp, pWeapon);
 	Args.m_VarsLocal.SetNum("ItemDamageChance", 40);
 	if ( pAmmo )
