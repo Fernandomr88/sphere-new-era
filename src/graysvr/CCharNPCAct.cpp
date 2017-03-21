@@ -1210,24 +1210,28 @@ bool CChar::NPC_LookAtItem( CItem * pItem, int iDist )
 			iWantThisItem = static_cast<int>(Args.m_iN2);
 		}
 	}
-
-	// Loot nearby items on ground
-	if ( iWantThisItem > Calc_GetRandVal(100) )
+	if ( NPC_GetAiFlags() & NPC_AI_LOOTING )
 	{
-		m_Act_Targ = pItem->GetUID();
-		NPC_Act_Looting();
-		return true;
-	}
+		// Loot nearby items on ground
+		if ( iWantThisItem > Calc_GetRandVal(100) )
+		{
+			m_Act_p = pItem->GetTopPoint();
+			m_Act_Targ = pItem->GetUID();
+			NPC_Act_Looting();
+			return true;
+		}
 
-	// Loot nearby corpses
-	if ( pItem->IsType(IT_CORPSE) )
-  	{
- 		if ( (!(NPC_GetAiFlags() & NPC_AI_LOOTING)) || Memory_FindObj(pItem) )
- 			return false;
- 
-		m_Act_Targ = pItem->GetUID();
-		NPC_Act_Looting();
-		return true;
+		// Loot nearby corpses
+		if ( pItem->IsType(IT_CORPSE) )
+		{
+			if ( Memory_FindObj(pItem) )
+				return false;
+
+			m_Act_p = pItem->GetTopPoint();
+			m_Act_Targ = pItem->GetUID();
+			NPC_Act_Looting();
+			return true;
+		}
 	}
 
 	// Check for doors we can open
@@ -2423,8 +2427,6 @@ void CChar::NPC_Act_Looting()
 	//
 	// m_Act_Targ = UID of the item/corpse that we trying to loot
 
-	if ( !(NPC_GetAiFlags() & NPC_AI_LOOTING) )
-		return;
 	if ( !m_pNPC || m_pNPC->m_Brain != NPCBRAIN_MONSTER || !Can(CAN_C_USEHANDS) || IsStatFlag(STATF_Conjured|STATF_Pet) || (m_TagDefs.GetKeyNum("DEATHFLAGS") & DEATH_NOCORPSE) )
 		return;
 	if ( m_pArea->IsFlag(REGION_FLAG_SAFE|REGION_FLAG_GUARDED) )

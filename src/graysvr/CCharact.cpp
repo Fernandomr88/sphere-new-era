@@ -3245,6 +3245,7 @@ TRIGRET_TYPE CChar::CheckLocation( bool fStanding )
 						Sound(SOUND_FLAMESTRIKE);
 						if ( m_pNPC && fStanding )
 						{
+							m_Act_p = GetTopPoint();
 							m_Act_p.Move(static_cast<DIR_TYPE>(Calc_GetRandVal(DIR_QTY)));
 							NPC_WalkToPoint(true);		// run away from the threat
 						}
@@ -3266,6 +3267,7 @@ TRIGRET_TYPE CChar::CheckLocation( bool fStanding )
 					bSpellHit = true;
 					if ( m_pNPC && fStanding )
 					{
+						m_Act_p = GetTopPoint();
 						m_Act_p.Move(static_cast<DIR_TYPE>(Calc_GetRandVal(DIR_QTY)));
 						NPC_WalkToPoint(true);		// run away from the threat
 					}
@@ -3277,6 +3279,7 @@ TRIGRET_TYPE CChar::CheckLocation( bool fStanding )
 				{
 					if ( m_pNPC && fStanding )
 					{
+						m_Act_p = GetTopPoint();
 						m_Act_p.Move(static_cast<DIR_TYPE>(Calc_GetRandVal(DIR_QTY)));
 						NPC_WalkToPoint(true);		// run away from the threat
 					}
