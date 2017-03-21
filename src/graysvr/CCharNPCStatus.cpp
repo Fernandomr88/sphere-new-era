@@ -442,10 +442,10 @@ int CChar::NPC_GetHostilityLevelToward(const CChar *pCharTarg) const
 	{
 		if ( !g_Cfg.m_fMonsterFight )	// Monsters are not supposed to fight other monsters!
 			return 0;
-		if ( ( GetDispID() == pCharTarg->GetDispID() ) && ( !pCharTarg->m_pPlayer ) )	// I will never attack those NPCs of my own kind
+		if  ( GetDispID() == pCharTarg->GetDispID() ) // && ( !pCharTarg->m_pPlayer ) )	// I will never attack those NPCs of my own kind
 			return -100;
-		if ( ( GetDispID() == pCharTarg->GetDispID() ) && ( pCharTarg->m_pPlayer ) )	// I will never attack those of my own kind
-			return 100;
+		// if ( ( GetDispID() == pCharTarg->GetDispID() ) && ( pCharTarg->m_pPlayer ) )	// I will attack those PLAYERS of my own kind
+		// 	return 100;
 		else if ( NPC_GetAllyGroupType(GetDispID()) == NPC_GetAllyGroupType(pCharTarg->GetDispID()) )
 			return -50;
 		else if ( m_pNPC->m_Brain == pCharTarg->m_pNPC->m_Brain )
