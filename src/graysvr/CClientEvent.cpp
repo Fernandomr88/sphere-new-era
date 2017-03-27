@@ -1189,7 +1189,7 @@ void CClient::Event_VendorSell(CChar *pVendor, const VendorItem *items, size_t i
 		CItemVendable *pItemSell = CChar::NPC_FindVendableItem(pItem, pContBuy);
 		if ( !pItemSell )
 			continue;
-		
+
 		// Now how much did i say i wanted to sell?
 		WORD amount = items[i].m_amount;
 		if ( pItem->GetAmount() < amount )	// selling more than I have?
@@ -2509,29 +2509,26 @@ void CClient::Event_ExtCmd(EXTCMD_TYPE type, TCHAR *pszName)
 
 		case EXTCMD_DOOR_AUTO:	// open door macro
 		{
-			CPointMap pt = m_pChar->GetTopPoint();
-			signed char iCharZ = pt.m_z;
-
-			pt.Move(m_pChar->m_dirFace);
-			CWorldSearch Area(pt, 1);
-			for (;;)
+			if ( m_pChar && !m_pChar->IsStatFlag( STATF_DEAD ) )
 			{
-				CItem *pItem = Area.GetItem();
-				if ( !pItem )
-					return;
-
-				switch ( pItem->GetType() )
+				CWorldSearch Area( m_pChar->GetTopPoint(), 3 );
+				for (;;)
 				{
-					case IT_DOOR:
-					case IT_DOOR_LOCKED:
-					case IT_PORTCULIS:
-					case IT_PORT_LOCKED:
-						if ( abs(iCharZ - pItem->GetTopPoint().m_z) < 20 )
-						{
-							m_pChar->SysMessageDefault(DEFMSG_MACRO_OPENDOOR);
-							m_pChar->Use_Obj(pItem, true);
+					CItem * pItem = Area.GetItem();
+					if ( pItem == NULL )
+						break;
+					switch ( pItem->GetType() )
+					{
+						case IT_PORT_LOCKED:	// Can only be trigered.
+						case IT_PORTCULIS:
+						case IT_DOOR_LOCKED:
+						case IT_DOOR:
+							m_pChar->Use_Obj( pItem, true );
 							return;
-						}
+
+						default:
+							break;
+					}
 				}
 			}
 			return;
