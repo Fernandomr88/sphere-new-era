@@ -480,8 +480,6 @@ WORD CChar::NPC_OnTrainCheck( CChar * pCharSrc, SKILL_TYPE Skill )
 	WORD iSkillVal = Skill_GetBase(Skill);
 	WORD iTrainVal = NPC_GetTrainMax(pCharSrc, Skill) - iSkillSrcVal;
 
-	g_Log.EventWarn("iSkillSrcVal %d iSkillVal %d iTrainVal %d pCharSrc->GetSkillTotal() %d pCharSrc->Skill_GetMax(static_cast<SKILL_TYPE>(g_Cfg.m_iMaxSkill) %d \n", iSkillSrcVal, iSkillVal, iTrainVal, pCharSrc->GetSkillTotal(), pCharSrc->Skill_GetMax(static_cast<SKILL_TYPE>(g_Cfg.m_iMaxSkill)));
-
 	// Train npc skill cap
 	WORD iMaxDecrease = 0;
 	if ( (pCharSrc->GetSkillTotal() + iTrainVal) > pCharSrc->Skill_GetMax(static_cast<SKILL_TYPE>(g_Cfg.m_iMaxSkill)) )
