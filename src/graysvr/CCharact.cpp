@@ -103,7 +103,7 @@ bool CChar::TeleportToObj( int iType, TCHAR * pszArgs )
 bool CChar::TeleportToCli( int iType, int iArgs )
 {
 	ADDTOCALLSTACK("CChar::TeleportToCli");
-	
+
 	ClientIterator it;
 	for (CClient* pClient = it.next(); pClient != NULL; pClient = it.next())
 	{
@@ -233,7 +233,7 @@ void CChar::LayerAdd( CItem * pItem, LAYER_TYPE layer )
 			return;
 		}
 
-		if (!pItem->IsTypeSpellable() && !pItem->m_itSpell.m_spell && !pItem->IsType(IT_WAND))	// can this item have a spell effect ? If so we do not send 
+		if (!pItem->IsTypeSpellable() && !pItem->m_itSpell.m_spell && !pItem->IsType(IT_WAND))	// can this item have a spell effect ? If so we do not send
 		{
 			if ((IsTrigUsed(TRIGGER_MEMORYEQUIP)) || (IsTrigUsed(TRIGGER_ITEMMEMORYEQUIP)))
 			{
@@ -1195,7 +1195,7 @@ bool CChar::UpdateAnimate(ANIM_TYPE action, bool fTranslate, bool fBackward , BY
 			cmd->send(pClient);
 	}
 	delete cmdnew;
-	delete cmd;	
+	delete cmd;
 	return true;
 }
 
@@ -1347,7 +1347,7 @@ void CChar::UpdateDir( const CObjBaseTemplate * pObj )
 // If character status has been changed (Polymorph), resend him
 // Or I changed looks.
 // I moved or somebody moved me  ?
-void CChar::Update(const CClient * pClientExclude ) 
+void CChar::Update(const CClient * pClientExclude )
 {
 	ADDTOCALLSTACK("CChar::Update");
 
@@ -1569,7 +1569,7 @@ int CChar::ItemPickup(CItem * pItem, WORD amount)
 	if ( m_pClient )
 	{
 		const CItem * pItemCont	= dynamic_cast <const CItem*> (pItem->GetParent());
-		
+
 		if ( pItemCont != NULL )
 		{
 			// Don't allow taking items from the bank unless we opened it here
@@ -2127,7 +2127,7 @@ bool CChar::Reveal( DWORD dwFlags )
 
 	if ( (dwFlags & STATF_Sleeping) && IsStatFlag(STATF_Sleeping) )
 		Wake();
-	
+
 	if ( (dwFlags & STATF_Invisible) && IsStatFlag(STATF_Invisible) )
 	{
 		CItem * pSpell = LayerFind(LAYER_SPELL_Invis);
@@ -2325,7 +2325,7 @@ CChar * CChar::Horse_GetMountChar() const
 // RETURN:
 //  true = done mounting
 //  false = we can't mount this
-bool CChar::Horse_Mount(CChar *pHorse) 
+bool CChar::Horse_Mount(CChar *pHorse)
 {
 	ADDTOCALLSTACK("CChar::Horse_Mount");
 
@@ -2391,7 +2391,7 @@ bool CChar::Horse_Mount(CChar *pHorse)
 }
 
 // Get off a horse (Remove horse item and spawn new horse)
-bool CChar::Horse_UnMount() 
+bool CChar::Horse_UnMount()
 {
 	ADDTOCALLSTACK("CChar::Horse_UnMount");
 	if ( !IsStatFlag(STATF_OnHorse) || (IsStatFlag(STATF_Stone) && !IsPriv(PRIV_GM)) )
@@ -2781,7 +2781,7 @@ bool CChar::RaiseCorpse( CItemCorpse * pCorpse )
 // Cleaning myself (dispel, cure, dismounting ...).
 // Creating the corpse ( MakeCorpse() ).
 // Removing myself from view, generating Death packets.
-// RETURN: 
+// RETURN:
 //		true = successfully died
 //		false = something went wrong? i'm an NPC, just delete (excepting BONDED ones).
 bool CChar::Death()
@@ -3975,7 +3975,10 @@ bool CChar::OnTick()
 	}
 
 	EXC_SET("update stats");
+
 	OnTickStatusUpdate();
+
+	EXC_SET("updated stats");
 
 	if ( !IsStatFlag(STATF_DEAD) && Stat_GetVal(STAT_STR) <= 0 )
 	{
@@ -3983,7 +3986,21 @@ bool CChar::OnTick()
 		return Death();
 	}
 
-	if ( IsTimerSet() && IsTimerExpired() )
+	EXC_SET("passed STATF_DEAD and Stat_GetVal");
+
+	bool isTimerSet = IsTimerSet();
+
+	EXC_SET("passed isTimerSet");
+
+	bool isTimerExpired = false;
+
+	if (isTimerSet) {
+		isTimerExpired = IsTimerExpired();
+	}
+
+	EXC_SET("passed isTimerExpired");
+
+	if ( isTimerSet && isTimerExpired )
 	{
 		EXC_SET("timer expired");
 		switch ( Skill_Done() )
