@@ -4,6 +4,8 @@
 //	Prefix:	DEFMSG_
 //
 
+MSG(ALCHEMY_NOBOTTLES,					"You have no bottles for your potion.")
+MSG(ALCHEMY_NOT_REG,					"That is not a reagent.")
 MSG(ANATOMY_DEX_1,						"very clumsy")
 MSG(ANATOMY_DEX_10,						"superhumanly agile")
 MSG(ANATOMY_DEX_2,						"somewhat uncoordinated")
@@ -254,6 +256,8 @@ MSG(ITEMUSE_LOG_USE,					"Use a dagger on wood to create bows or shafts.")
 MSG(ITEMUSE_LOOM,						"Use thread or yarn on looms")
 MSG(ITEMUSE_LOOM_REMOVE,				"You remove the previously uncompleted weave.")
 MSG(ITEMUSE_MACEPICK_TARG,				"Where do you want to use the %s?")
+MSG(ITEMUSE_MORTAR_PROMT,				"What reagent you like to make a potion out of?")
+MSG(ITEMUSE_NO_MORTAR,					"You have no mortar and pestle.")
 MSG(ITEMUSE_MULTI_BLOCKED,				"The structure is blocked.")
 MSG(ITEMUSE_MULTI_BUMP,					"Terrain is too bumpy to place structure here.")
 MSG(ITEMUSE_MULTI_COLLAPSE,				"The structure collapses.")

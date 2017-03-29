@@ -235,9 +235,9 @@ bool CClient::Cmd_Control( CChar * pChar2 )
 		if ( pChar1->GetID() == CREID_EQUIP_GM_ROBE ||
 			pChar1->GetID() == CREID_GHOSTMAN ||
 			pChar1->GetID() == CREID_GHOSTWOMAN ||
-			pChar1->GetID() == CREID_ELFGHOSTMAN || 
+			pChar1->GetID() == CREID_ELFGHOSTMAN ||
 			pChar1->GetID() == CREID_ELFGHOSTWOMAN ||
-			pChar1->GetID() == CREID_GARGGHOSTMAN || 
+			pChar1->GetID() == CREID_GARGGHOSTMAN ||
 			pChar1->GetID() == CREID_GARGGHOSTWOMAN )	// CREID_EQUIP_GM_ROBE
 		{
 			pChar1->Delete();
@@ -749,7 +749,7 @@ int CClient::OnSkill_AnimalLore( CGrayUID uid, int iSkillLevel, bool fTest )
 		if ( pChar == m_pChar )
 			return( 2 );
 		if ( m_pChar->IsStatFlag( STATF_OnHorse ) )
-		{ 
+		{
 			CItem * pItem = m_pChar->LayerFind( LAYER_HORSE );
 			if ( pItem && pItem->m_itFigurine.m_UID == uid)
 				return( 1 );
@@ -787,7 +787,7 @@ int CClient::OnSkill_AnimalLore( CGrayUID uid, int iSkillLevel, bool fTest )
 	// How well fed ?
 	// Food count = 30 minute intervals.
 	LPCTSTR pszText = pChar->IsStatFlag(STATF_Conjured) ?
-						g_Cfg.GetDefaultMsg(DEFMSG_ANIMALLORE_CONJURED) : 
+						g_Cfg.GetDefaultMsg(DEFMSG_ANIMALLORE_CONJURED) :
 						pChar->Food_GetLevelMessage(pCharOwner ? true : false, true);
 
 	sprintf(pszTemp, g_Cfg.GetDefaultMsg(DEFMSG_ANIMALLORE_FOOD), pszHe, pszText);
@@ -2389,6 +2389,11 @@ bool CClient::OnTarg_Use_Item( CObjBase * pObjTarg, CPointMap & pt, ITEMID_TYPE 
 				return( false );
 		}
 		break;
+
+	case IT_POTION_EMPTY:
+	case IT_MORTAR:
+		// Alchemy targeting stuff
+		return( Cmd_Skill_Alchemy( pItemTarg ));
 
 	case IT_SEWING_KIT:
 		// Use on cloth or hides
