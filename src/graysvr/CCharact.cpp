@@ -1205,25 +1205,46 @@ void CChar::UpdateMode( CClient * pExcludeClient, bool fFull )
 {
 	ADDTOCALLSTACK("CChar::UpdateMode");
 
+	EXC_TRY("UpdateMode");
+
+	EXC_SET("init");
+
 	// no need to update the mode in the next tick
 	if ( pExcludeClient == NULL )
 		m_fStatusUpdate &= ~SU_UPDATE_MODE;
 
 	ClientIterator it;
+
+	EXC_SET("for");
+
 	for ( CClient* pClient = it.next(); pClient != NULL; pClient = it.next() )
 	{
+		EXC_SET("for1");
+
 		if ( pExcludeClient == pClient )
 			continue;
+
+		EXC_SET("for2");
+
 		if ( pClient->GetChar() == NULL )
 			continue;
+
+		EXC_SET("for3");
+
 		if ( GetTopPoint().GetDistSight(pClient->GetChar()->GetTopPoint()) > pClient->GetChar()->GetSight() )
 			continue;
+
+		EXC_SET("for4");
+
 		if ( !pClient->CanSee(this) )
 		{
 			// In the case of "INVIS" used by GM's we must use this.
 			pClient->addObjectRemove(this);
 			continue;
 		}
+
+
+		EXC_SET("for5");
 
 		if ( fFull )
 			pClient->addChar(this);
@@ -1232,7 +1253,11 @@ void CChar::UpdateMode( CClient * pExcludeClient, bool fFull )
 			pClient->addCharMove(this);
 			pClient->addHealthBarUpdate(this);
 		}
+
+		EXC_SET("for6");
 	}
+
+	EXC_CATCH;
 }
 
 void CChar::UpdateSpeedMode()
@@ -3844,8 +3869,17 @@ void CChar::OnTickStatusUpdate()
 {
 	ADDTOCALLSTACK("CChar::OnTickStatusUpdate");
 
-	if ( m_pClient )
+	EXC_TRY("OnTickStatusUpdate");
+
+	if ( m_pClient ) {
+		EXC_SET("UpdateStats");
+
 		m_pClient->UpdateStats();
+
+		EXC_SET("UpdateStats - done!");
+	}
+
+	EXC_SET("checking status update - 1");
 
 	INT64 iTimeDiff = - g_World.GetTimeDiff( m_timeLastHitsUpdate );
 	if ( g_Cfg.m_iHitsUpdateRate && ( iTimeDiff >= g_Cfg.m_iHitsUpdateRate ) )
@@ -3859,6 +3893,8 @@ void CChar::OnTickStatusUpdate()
 		m_timeLastHitsUpdate = CServTime::GetCurrentTime();
 	}
 
+	EXC_SET("checking status update - 2");
+
 	if ( m_fStatusUpdate & SU_UPDATE_MODE )
 	{
 		UpdateMode();
@@ -3866,6 +3902,8 @@ void CChar::OnTickStatusUpdate()
 	}
 
 	CObjBase::OnTickStatusUpdate();
+
+	EXC_CATCH;
 }
 
 // Food decay, decrease FOOD value.

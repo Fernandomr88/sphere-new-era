@@ -514,17 +514,27 @@ void CObjBase::UpdateCanSee(PacketSend *packet, CClient *exclude) const
 	// Send this update message to everyone who can see this.
 	// NOTE: Need not be a top level object. CanSee() will calc that.
 
+	EXC_TRY("UpdateCanSee");
+
+	EXC_SET("sending to clients");
+
 	ClientIterator it;
 	for ( CClient *pClient = it.next(); pClient != NULL; pClient = it.next() )
 	{
 		if ( pClient == exclude )
 			continue;
+		EXC_SET("can see");
 		if ( !pClient->CanSee(this) )
 			continue;
 
+		EXC_SET("send");
 		packet->send(pClient);
 	}
 	delete packet;
+
+	EXC_SET("sending to clients - done");
+
+	EXC_CATCH;
 }
 
 TRIGRET_TYPE CObjBase::OnHearTrigger(CResourceLock &s, LPCTSTR pszCmd, CChar *pSrc, TALKMODE_TYPE &mode, HUE_TYPE wHue)
@@ -800,7 +810,7 @@ bool CObjBase::r_WriteVal(LPCTSTR pszKey, CGString &sVal, CTextConsole *pSrc)
 			sVal.FormatLLVal(pVar ? pVar->GetValNum() : 0);
 			break;
 		}
-			
+
 		case OC_ARMOR:
 		{
 			if ( IsChar() )
@@ -1896,7 +1906,7 @@ bool CObjBase::r_Verb(CScript &s, CTextConsole *pSrc)
 				(iArgQty >= 4) ? static_cast<BYTE>(piCmd[3]) : 1,		// BYTE bLoop = 1,
 				(iArgQty >= 5) ? (piCmd[4] != 0) : false,				// bool fExplode = false
 				(iArgQty >= 6) ? static_cast<DWORD>(piCmd[5]) : 0,		// Hue
-				(iArgQty >= 7) ? static_cast<DWORD>(piCmd[6]) : 0,		// Render mode,		
+				(iArgQty >= 7) ? static_cast<DWORD>(piCmd[6]) : 0,		// Render mode,
 				(iArgQty >= 8) ? static_cast<WORD>(piCmd[7]) : 0,		// EffectID	//New Packet 0xc7
 				(iArgQty >= 9) ? static_cast<WORD>(piCmd[8]) : 0,		// ExplodeID
 				(iArgQty >= 10) ? static_cast<WORD>(piCmd[9]) : 0,		// ExplodeSound
@@ -2630,8 +2640,15 @@ void CObjBase::OnTickStatusUpdate()
 	ADDTOCALLSTACK("CObjBase::OnTickStatusUpdate");
 	// process m_fStatusUpdate flags
 
-	if ( m_fStatusUpdate & SU_UPDATE_TOOLTIP )
+	EXC_TRY("OnTickStatusUpdate");
+
+	if ( m_fStatusUpdate & SU_UPDATE_TOOLTIP ) {
+		EXC_SET("m_fStatusUpdate");
 		ResendTooltip();
+		EXC_SET("m_fStatusUpdate - done!");
+	}
+
+	EXC_CATCH;
 }
 
 void CObjBase::ResendTooltip(bool bSendFull, bool bUseCache)
