@@ -520,20 +520,23 @@ void CChar::NPC_PetClearOwners()
 		{
 			CItemContainer *pBankVendor = GetContainerCreate(LAYER_BANKBOX);
 			CItemContainer *pBankOwner = pOwner->GetContainerCreate(LAYER_BANKBOX);
-			pOwner->AddGoldToPack( pBankVendor->m_itEqBankBox.m_Check_Amount, pBankOwner );
-			pBankVendor->m_itEqBankBox.m_Check_Amount = 0;
-
-			for ( size_t i = 0; i < COUNTOF(sm_VendorLayers); i++ )
+			if (pBankVendor)
 			{
-				CItemContainer *pCont = GetContainerCreate(sm_VendorLayers[i]);
-				if ( !pCont )
-					continue;
+				pOwner->AddGoldToPack(pBankVendor->m_itEqBankBox.m_Check_Amount, pBankOwner);
+				pBankVendor->m_itEqBankBox.m_Check_Amount = 0;
 
-				CItem *pItemNext = NULL;
-				for ( CItem *pItem = pCont->GetContentHead(); pItem != NULL; pItem = pItemNext )
+				for (size_t i = 0; i < COUNTOF(sm_VendorLayers); i++)
 				{
-					pItemNext = pItem->GetNext();
-					pBankOwner->ContentAdd(pItem);
+					CItemContainer *pCont = GetContainerCreate(sm_VendorLayers[i]);
+					if (!pCont)
+						continue;
+
+					CItem *pItemNext = NULL;
+					for (CItem *pItem = pCont->GetContentHead(); pItem != NULL; pItem = pItemNext)
+					{
+						pItemNext = pItem->GetNext();
+						pBankOwner->ContentAdd(pItem);
+					}
 				}
 			}
 		}

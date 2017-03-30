@@ -103,7 +103,7 @@ bool CChar::TeleportToObj( int iType, TCHAR * pszArgs )
 bool CChar::TeleportToCli( int iType, int iArgs )
 {
 	ADDTOCALLSTACK("CChar::TeleportToCli");
-	
+
 	ClientIterator it;
 	for (CClient* pClient = it.next(); pClient != NULL; pClient = it.next())
 	{
@@ -233,7 +233,7 @@ void CChar::LayerAdd( CItem * pItem, LAYER_TYPE layer )
 			return;
 		}
 
-		if (!pItem->IsTypeSpellable() && !pItem->m_itSpell.m_spell && !pItem->IsType(IT_WAND))	// can this item have a spell effect ? If so we do not send 
+		if (!pItem->IsTypeSpellable() && !pItem->m_itSpell.m_spell && !pItem->IsType(IT_WAND))	// can this item have a spell effect ? If so we do not send
 		{
 			if ((IsTrigUsed(TRIGGER_MEMORYEQUIP)) || (IsTrigUsed(TRIGGER_ITEMMEMORYEQUIP)))
 			{
@@ -1195,7 +1195,7 @@ bool CChar::UpdateAnimate(ANIM_TYPE action, bool fTranslate, bool fBackward , BY
 			cmd->send(pClient);
 	}
 	delete cmdnew;
-	delete cmd;	
+	delete cmd;
 	return true;
 }
 
@@ -1205,25 +1205,46 @@ void CChar::UpdateMode( CClient * pExcludeClient, bool fFull )
 {
 	ADDTOCALLSTACK("CChar::UpdateMode");
 
+	EXC_TRY("UpdateMode");
+
+	EXC_SET("init");
+
 	// no need to update the mode in the next tick
 	if ( pExcludeClient == NULL )
 		m_fStatusUpdate &= ~SU_UPDATE_MODE;
 
 	ClientIterator it;
+
+	EXC_SET("for");
+
 	for ( CClient* pClient = it.next(); pClient != NULL; pClient = it.next() )
 	{
+		EXC_SET("for1");
+
 		if ( pExcludeClient == pClient )
 			continue;
+
+		EXC_SET("for2");
+
 		if ( pClient->GetChar() == NULL )
 			continue;
+
+		EXC_SET("for3");
+
 		if ( GetTopPoint().GetDistSight(pClient->GetChar()->GetTopPoint()) > pClient->GetChar()->GetSight() )
 			continue;
+
+		EXC_SET("for4");
+
 		if ( !pClient->CanSee(this) )
 		{
 			// In the case of "INVIS" used by GM's we must use this.
 			pClient->addObjectRemove(this);
 			continue;
 		}
+
+
+		EXC_SET("for5");
 
 		if ( fFull )
 			pClient->addChar(this);
@@ -1232,7 +1253,11 @@ void CChar::UpdateMode( CClient * pExcludeClient, bool fFull )
 			pClient->addCharMove(this);
 			pClient->addHealthBarUpdate(this);
 		}
+
+		EXC_SET("for6");
 	}
+
+	EXC_CATCH;
 }
 
 void CChar::UpdateSpeedMode()
@@ -1347,7 +1372,7 @@ void CChar::UpdateDir( const CObjBaseTemplate * pObj )
 // If character status has been changed (Polymorph), resend him
 // Or I changed looks.
 // I moved or somebody moved me  ?
-void CChar::Update(const CClient * pClientExclude ) 
+void CChar::Update(const CClient * pClientExclude )
 {
 	ADDTOCALLSTACK("CChar::Update");
 
@@ -1569,7 +1594,7 @@ int CChar::ItemPickup(CItem * pItem, WORD amount)
 	if ( m_pClient )
 	{
 		const CItem * pItemCont	= dynamic_cast <const CItem*> (pItem->GetParent());
-		
+
 		if ( pItemCont != NULL )
 		{
 			// Don't allow taking items from the bank unless we opened it here
@@ -2127,7 +2152,7 @@ bool CChar::Reveal( DWORD dwFlags )
 
 	if ( (dwFlags & STATF_Sleeping) && IsStatFlag(STATF_Sleeping) )
 		Wake();
-	
+
 	if ( (dwFlags & STATF_Invisible) && IsStatFlag(STATF_Invisible) )
 	{
 		CItem * pSpell = LayerFind(LAYER_SPELL_Invis);
@@ -2325,7 +2350,7 @@ CChar * CChar::Horse_GetMountChar() const
 // RETURN:
 //  true = done mounting
 //  false = we can't mount this
-bool CChar::Horse_Mount(CChar *pHorse) 
+bool CChar::Horse_Mount(CChar *pHorse)
 {
 	ADDTOCALLSTACK("CChar::Horse_Mount");
 
@@ -2391,7 +2416,7 @@ bool CChar::Horse_Mount(CChar *pHorse)
 }
 
 // Get off a horse (Remove horse item and spawn new horse)
-bool CChar::Horse_UnMount() 
+bool CChar::Horse_UnMount()
 {
 	ADDTOCALLSTACK("CChar::Horse_UnMount");
 	if ( !IsStatFlag(STATF_OnHorse) || (IsStatFlag(STATF_Stone) && !IsPriv(PRIV_GM)) )
@@ -2781,7 +2806,7 @@ bool CChar::RaiseCorpse( CItemCorpse * pCorpse )
 // Cleaning myself (dispel, cure, dismounting ...).
 // Creating the corpse ( MakeCorpse() ).
 // Removing myself from view, generating Death packets.
-// RETURN: 
+// RETURN:
 //		true = successfully died
 //		false = something went wrong? i'm an NPC, just delete (excepting BONDED ones).
 bool CChar::Death()
@@ -3844,8 +3869,17 @@ void CChar::OnTickStatusUpdate()
 {
 	ADDTOCALLSTACK("CChar::OnTickStatusUpdate");
 
-	if ( m_pClient )
+	EXC_TRY("OnTickStatusUpdate");
+
+	if ( m_pClient ) {
+		EXC_SET("UpdateStats");
+
 		m_pClient->UpdateStats();
+
+		EXC_SET("UpdateStats - done!");
+	}
+
+	EXC_SET("checking status update - 1");
 
 	INT64 iTimeDiff = - g_World.GetTimeDiff( m_timeLastHitsUpdate );
 	if ( g_Cfg.m_iHitsUpdateRate && ( iTimeDiff >= g_Cfg.m_iHitsUpdateRate ) )
@@ -3859,6 +3893,8 @@ void CChar::OnTickStatusUpdate()
 		m_timeLastHitsUpdate = CServTime::GetCurrentTime();
 	}
 
+	EXC_SET("checking status update - 2");
+
 	if ( m_fStatusUpdate & SU_UPDATE_MODE )
 	{
 		UpdateMode();
@@ -3866,6 +3902,8 @@ void CChar::OnTickStatusUpdate()
 	}
 
 	CObjBase::OnTickStatusUpdate();
+
+	EXC_CATCH;
 }
 
 // Food decay, decrease FOOD value.
@@ -3975,7 +4013,10 @@ bool CChar::OnTick()
 	}
 
 	EXC_SET("update stats");
+
 	OnTickStatusUpdate();
+
+	EXC_SET("updated stats");
 
 	if ( !IsStatFlag(STATF_DEAD) && Stat_GetVal(STAT_STR) <= 0 )
 	{
@@ -3983,7 +4024,21 @@ bool CChar::OnTick()
 		return Death();
 	}
 
-	if ( IsTimerSet() && IsTimerExpired() )
+	EXC_SET("passed STATF_DEAD and Stat_GetVal");
+
+	bool isTimerSet = IsTimerSet();
+
+	EXC_SET("passed isTimerSet");
+
+	bool isTimerExpired = false;
+
+	if (isTimerSet) {
+		isTimerExpired = IsTimerExpired();
+	}
+
+	EXC_SET("passed isTimerExpired");
+
+	if ( isTimerSet && isTimerExpired )
 	{
 		EXC_SET("timer expired");
 		switch ( Skill_Done() )

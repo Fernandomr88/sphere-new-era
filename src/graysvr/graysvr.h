@@ -1278,6 +1278,7 @@ public:
 	bool Cmd_Skill_Smith( CItem * pIngots );
 	bool Cmd_Skill_Magery( SPELL_TYPE iSpell, CObjBase * pSrc );
 	bool Cmd_Skill_Tracking( WORD track_type = USHRT_MAX, bool bExec = false ); // Fill menu with specified creature types
+	bool Cmd_Skill_Alchemy(CItem * pReag);
 	bool Cmd_Skill_Inscription();
 	bool Cmd_SecureTrade( CChar * pChar, CItem * pItem );
 	bool Cmd_Control( CChar * pChar );
