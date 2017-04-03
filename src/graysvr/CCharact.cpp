@@ -3084,7 +3084,7 @@ CRegionBase * CChar::CanMoveWalkTo( CPointBase & ptDst, bool fCheckChars, bool f
 
 	EXC_SET("Creature bumping");
 	short iStamReq = 0;
-	if ( fCheckChars && !IsStatFlag(STATF_DEAD|STATF_Sleeping|STATF_Insubstantial) )
+	if ( fCheckChars && !IsStatFlag(STATF_DEAD|STATF_Sleeping|STATF_Insubstantial) && !fPathFinding )
 	{
 		CItem * pPoly = LayerFind(LAYER_SPELL_Polymorph);
 		CWorldSearch AreaChars(ptDst);
