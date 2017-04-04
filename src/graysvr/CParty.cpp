@@ -165,19 +165,46 @@ bool CPartyDef::GetLootFlag( const CChar *pChar )
 void CPartyDef::AddStatsUpdate( CChar *pChar, PacketSend *pPacket )
 {
 	ADDTOCALLSTACK("CPartyDef::AddStatsUpdate");
-	size_t iQty = m_Chars.GetCharCount();
-	if ( iQty <= 0 )
-		return;
 
-	for ( size_t i = 0; i < iQty; i++ )
+	EXC_TRY("AddStatsUpdate");
+
+	EXC_SET("Before if");
+
+	if (pPacket)
 	{
-		CChar *pCharNow = m_Chars.GetChar(i).CharFind();
-		if ( pCharNow && pCharNow != pChar )
+		EXC_SET("GetCharCount");
+
+		size_t iQty = m_Chars.GetCharCount();
+
+		EXC_SET("GetCharCount - done");
+
+		if ( iQty <= 0 )
+			return;
+
+		for ( size_t i = 0; i < iQty; i++ )
 		{
-			if ( pCharNow->m_pClient && pCharNow->CanSee(pChar) )
-				pPacket->send(pCharNow->m_pClient);
+			EXC_SET("m_Chars.GetChar(i).CharFind()");
+
+			CChar *pCharNow = m_Chars.GetChar(i).CharFind();
+
+			EXC_SET("m_Chars.GetChar(i).CharFind() - done");
+
+			if ( pCharNow && pCharNow != pChar )
+			{
+				EXC_SET("pCharNow->m_pClient && pCharNow->CanSee(pChar)");
+
+				if ( pCharNow->m_pClient && pCharNow->CanSee(pChar) ) {
+					EXC_SET("pCharNow->m_pClient && pCharNow->CanSee(pChar) - done");
+
+					pPacket->send(pCharNow->m_pClient);
+
+					EXC_SET("Packet sent");
+				}
+			}
 		}
 	}
+
+	EXC_CATCH;
 }
 
 // ---------------------------------------------------------
@@ -596,7 +623,7 @@ bool CPartyDef::r_GetRef( LPCTSTR &pszKey, CScriptObj *&pRef )
 }
 
 bool CPartyDef::r_LoadVal( CScript &s )
-{ 
+{
 	ADDTOCALLSTACK("CPartyDef::r_LoadVal");
 	EXC_TRY("LoadVal");
 	LPCTSTR pszKey = s.GetKey();
@@ -628,7 +655,7 @@ bool CPartyDef::r_LoadVal( CScript &s )
 			pszKey = pszKey + ((index == PDC_TAG0) ? 5 : 4);
 			m_TagDefs.SetStr(pszKey, fQuoted, s.GetArgStr(&fQuoted), (index == PDC_TAG0));
 		} break;
-		
+
 		default:
 			return false;
 	}
@@ -788,7 +815,7 @@ bool CPartyDef::r_Verb( CScript &s, CTextConsole *pSrc )
 
 			if ( pCharMaster && !bForced )
 				pCharMaster->SetKeyNum("PARTY_LASTINVITE", (long long)toAdd);
-			
+
 			return CPartyDef::AcceptEvent(pCharAdd, GetMaster(), bForced);
 		} break;
 
@@ -920,8 +947,8 @@ bool CPartyDef::r_Verb( CScript &s, CTextConsole *pSrc )
 }
 
 bool CPartyDef::r_Load( CScript &s )
-{ 
+{
 	ADDTOCALLSTACK("CPartyDef::r_Load");
 	UNREFERENCED_PARAMETER(s);
-	return false; 
+	return false;
 }
