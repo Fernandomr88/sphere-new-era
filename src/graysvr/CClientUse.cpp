@@ -877,7 +877,9 @@ size_t CClient::Cmd_Skill_Menu_Build( RESOURCE_ID_BASE rid, int iSelect, CMenuIt
 				{
 					// Test if there is anything in this skillmenu we can do.
 					++sm_iReentrant;
-					if ( !Cmd_Skill_Menu_Build(g_Cfg.ResourceGetIDType(RES_SKILLMENU, s.GetArgStr()), -2, *&item, iMaxSize, fShowMenu, fLimitReached) )
+
+					CMenuItem item;
+					if ( !Cmd_Skill_Menu_Build(g_Cfg.ResourceGetIDType(RES_SKILLMENU, s.GetArgStr()), -2, &item, iMaxSize, fShowMenu, fLimitReached) )
 					{
 						iShowCount--;
 						fSkip = true;
