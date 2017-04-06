@@ -250,7 +250,7 @@ void CClient::addTime( bool bCurrent )
 	if ( bCurrent )
 	{
 		long long lCurrentTime = (CServTime::GetCurrentTime()).GetTimeRaw();
-		new PacketGameTime(this, 
+		new PacketGameTime(this,
 								( lCurrentTime / ( 60*60*TICK_PER_SEC )) % 24,
 								( lCurrentTime / ( 60*TICK_PER_SEC )) % 60,
 								( lCurrentTime / ( TICK_PER_SEC )) % 60);
@@ -334,7 +334,7 @@ void CClient::addItem_OnGround( CItem * pItem ) // Send items (on ground)
 	ADDTOCALLSTACK("CClient::addItem_OnGround");
 	if ( !pItem )
 		return;
-	
+
 	if ( PacketItemWorldNew::CanSendTo(m_NetState) )
 		new PacketItemWorldNew(this, pItem);
 	else
@@ -396,7 +396,7 @@ void CClient::addItem_InContainer( const CItem * pItem )
 		return;
 
 	new PacketItemContainer(this, pItem);
-	
+
 	if ( PacketDropAccepted::CanSendTo(m_NetState) )
 		new PacketDropAccepted(this);
 
@@ -481,7 +481,7 @@ void CClient::LogOpenedContainer(const CItemContainer* pContainer) // record a c
 
 	DWORD dwTopMostContainerUID = pTopMostContainer->GetUID().GetPrivateUID();
 	DWORD dwTopContainerUID = 0;
-	
+
 	if ( pTopContainer )
 		dwTopContainerUID = pTopContainer->GetUID().GetPrivateUID();
 	else
@@ -538,7 +538,7 @@ void CClient::addLight()
 
 	if ( iLight == UCHAR_MAX )
 		iLight = m_pChar->GetLightLevel();
-		
+
 	// Scale light level for non-t2a.
 	if ( iLight < LIGHT_BRIGHT )
 		iLight = LIGHT_BRIGHT;
@@ -1894,40 +1894,72 @@ void CClient::addPlayerUpdate()
 void CClient::UpdateStats()
 {
 	ADDTOCALLSTACK("CClient::UpdateStats");
+
+	EXC_TRY("OnTickStatusUpdate");
+
+	EXC_SET("Before check - 1");
+
 	if ( !m_fUpdateStats || !m_pChar )
 		return;
 
+	EXC_SET("Before check - 2");
+
 	if ( m_fUpdateStats & SF_UPDATE_STATUS )
 	{
+		EXC_SET("addHealthBarInfo");
+
 		addHealthBarInfo(m_pChar);
 		m_fUpdateStats = 0;
+
+		EXC_SET("addHealthBarInfo - done");
 	}
 	else
 	{
 		if ( m_fUpdateStats & SF_UPDATE_HITS )
 		{
+			EXC_SET("addHitsUpdate");
+
 			addHitsUpdate(m_pChar);
 			m_fUpdateStats &= ~SF_UPDATE_HITS;
+
+			EXC_SET("addHitsUpdate - done");
 		}
 		if ( m_fUpdateStats & SF_UPDATE_MANA )
 		{
+			EXC_SET("addManaUpdate");
+
 			addManaUpdate(m_pChar);
 			m_fUpdateStats &= ~SF_UPDATE_MANA;
+
+			EXC_SET("addManaUpdate - done");
 		}
 
 		if ( m_fUpdateStats & SF_UPDATE_STAM )
 		{
+			EXC_SET("addStamUpdate");
+
 			addStamUpdate(m_pChar);
 			m_fUpdateStats &= ~SF_UPDATE_STAM;
+
+			EXC_SET("addStamUpdate - done");
 		}
 	}
+
+	EXC_CATCH;
 }
 
 void CClient::addHealthBarInfo( CObjBase * pObj, bool fRequested ) // Opens the status window
 {
 	ADDTOCALLSTACK("CClient::addHealthBarInfo");
+
+	EXC_TRY("addHealthBarInfo");
+
+	EXC_SET("Before !pObj");
+
 	if ( !pObj )
 		return;
+
+	EXC_SET("Before trigger");
 
 	if ( IsTrigUsed(TRIGGER_USERSTATS) )
 	{
@@ -1937,13 +1969,24 @@ void CClient::addHealthBarInfo( CObjBase * pObj, bool fRequested ) // Opens the 
 			return;
 	}
 
+	EXC_SET("After trigger");
+
 	new PacketHealthBarInfo(this, pObj);
+
+	EXC_SET("After PacketHealthBarInfo");
+
 	if ( pObj == m_pChar )
 	{
 		m_fUpdateStats = 0;
+		EXC_SET("PacketStatLocks::CanSendTo");
+
 		if ( PacketStatLocks::CanSendTo(m_NetState) )
 			new PacketStatLocks(this, m_pChar);
+
+		EXC_SET("PacketStatLocks::CanSendTo - done");
 	}
+
+	EXC_CATCH;
 }
 
 void CClient::addHitsUpdate( CChar *pChar )
@@ -1952,8 +1995,19 @@ void CClient::addHitsUpdate( CChar *pChar )
 	if ( !pChar )
 		return;
 
+	EXC_TRY("addHitsUpdate");
+
+	EXC_SET("Before construction");
+
 	PacketHealthUpdate cmd(pChar, pChar == m_pChar);
+
+	EXC_SET("Before sending");
+
 	cmd.send(this);
+
+	EXC_SET("After sending");
+
+	EXC_CATCH;
 }
 
 void CClient::addManaUpdate( CChar *pChar )
@@ -1962,14 +2016,34 @@ void CClient::addManaUpdate( CChar *pChar )
 	if ( !pChar )
 		return;
 
+	EXC_TRY("addManaUpdate");
+
+	EXC_SET("Before construction");
+
 	PacketManaUpdate cmd(pChar, true);
+
+	EXC_SET("Before sending");
+
 	cmd.send(this);
+
+	EXC_SET("After sending");
 
 	if ( pChar->m_pParty )
 	{
+		EXC_SET("Before construction - party");
+
 		PacketManaUpdate cmd2(pChar, false);
+
+		EXC_SET("After construction - party");
+
+		EXC_SET("Before AddStatsUpdate  - party");
+
 		pChar->m_pParty->AddStatsUpdate(pChar, &cmd2);
+
+		EXC_SET("After AddStatsUpdate  - party");
 	}
+
+	EXC_CATCH;
 }
 
 void CClient::addStamUpdate( CChar *pChar )
@@ -1978,14 +2052,34 @@ void CClient::addStamUpdate( CChar *pChar )
 	if ( !pChar )
 		return;
 
+	EXC_TRY("addStamUpdate");
+
+	EXC_SET("Before construction");
+
 	PacketStaminaUpdate cmd(pChar, true);
+
+	EXC_SET("Before sending");
+
 	cmd.send(this);
+
+	EXC_SET("After sending");
 
 	if ( pChar->m_pParty )
 	{
+		EXC_SET("Before construction - party");
+
 		PacketStaminaUpdate cmd2(pChar, false);
+
+		EXC_SET("After construction - party");
+
+		EXC_SET("Before AddStatsUpdate  - party");
+
 		pChar->m_pParty->AddStatsUpdate(pChar, &cmd2);
+
+		EXC_SET("After AddStatsUpdate  - party");
 	}
+
+	EXC_CATCH;
 }
 
 void CClient::addHealthBarUpdate( const CChar * pChar )
@@ -3217,7 +3311,7 @@ void CClient::addAOSTooltip( const CObjBase *pObj, bool bRequested, bool bShop )
 				break;
 		}
 	}
-	
+
 	// Delete the original packet, as long as it doesn't belong to the object (i.e. wasn't cached)
 	if ( propertyList != pObj->GetPropertyList() )
 		delete propertyList;
