@@ -1459,21 +1459,25 @@ CItem * CChar::Skill_NaturalResource_Create( CItem * pResBit, SKILL_TYPE skill )
 	if ( IsTrigUsed(TRIGGER_RESOURCEGATHER) )
 		tRet = pOreDef->OnTrigger("@ResourceGather", this, &Args);
 	
-	if ( tRet == TRIGRET_RET_TRUE )
+	if ( tRet == TRIGRET_RET_TRUE ) 
+	{
 		return( NULL );
+	}
+	else 
+	{
+		//Creating the 'id' variable with the local given through->by the trigger(s) instead on top of method
+		ITEMID_TYPE id = static_cast<ITEMID_TYPE>(RES_GET_INDEX( Args.m_VarsLocal.GetKeyNum("ResourceID")));
 
-	//Creating the 'id' variable with the local given through->by the trigger(s) instead on top of method
-	ITEMID_TYPE id = static_cast<ITEMID_TYPE>(RES_GET_INDEX( Args.m_VarsLocal.GetKeyNum("ResourceID")));
+		iAmount = pResBit->ConsumeAmount(static_cast<WORD>(Args.m_iN1));	// amount i used up.
+		if ( iAmount <= 0 )
+			return( NULL );
 
-	iAmount = pResBit->ConsumeAmount(static_cast<WORD>(Args.m_iN1));	// amount i used up.
-	if ( iAmount <= 0 )
-		return( NULL );
+		CItem * pItem = CItem::CreateScript( id, this );
+		ASSERT(pItem);
 
-	CItem * pItem = CItem::CreateScript( id, this );
-	ASSERT(pItem);
-
-	pItem->SetAmount( iAmount );
-	return( pItem );
+		pItem->SetAmount( iAmount );
+		return( pItem );
+	}
 }
 
 bool CChar::Skill_Mining_Smelt( CItem * pItemOre, CItem * pItemTarg )
