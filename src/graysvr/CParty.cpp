@@ -118,6 +118,7 @@ size_t CPartyDef::DetachChar( CChar *pChar )
 	// RETURN:
 	//  index of the char in the group. BadIndex = not in group.
 	size_t i = m_Chars.DetachChar(pChar);
+
 	if ( i != m_Chars.BadIndex() )
 	{
 		pChar->m_pParty = NULL;
@@ -445,11 +446,10 @@ bool CPartyDef::Disband( CGrayUID uidMaster )
 	SysMessageAll(g_Cfg.GetDefaultMsg(DEFMSG_PARTY_DISBANDED));
 
 	CChar *pSrc = uidMaster.CharFind();
-	size_t iQty = m_Chars.GetCharCount();
-	ASSERT(iQty > 0);
-	for ( size_t i = 0; i < iQty; i++ )
+	ASSERT(m_Chars.GetCharCount() > 0);
+	while ( m_Chars.GetCharCount() > 0 )
 	{
-		CChar *pChar = m_Chars.GetChar(i).CharFind();
+		CChar *pChar = m_Chars.GetChar(0).CharFind();
 		if ( !pChar )
 			continue;
 
