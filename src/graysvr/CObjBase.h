@@ -3763,12 +3763,28 @@ public:
 	CItemMemory * Memory_FindTypes( WORD MemTypes ) const;
 	CItemMemory * Memory_FindObjTypes( const CObjBase * pObj, WORD MemTypes ) const
 	{
-		CItemMemory *pMemory = Memory_FindObj(pObj);
-		if ( !pMemory )
+		if (!pObj)
 			return NULL;
-		if ( !pMemory->IsMemoryTypes(MemTypes) )
-			return NULL;
-		return pMemory;
+
+		CGrayUID uid = pObj->GetUID();
+		CItemMemory *pMemory = NULL;
+
+		for (CItem *pItem = GetContentHead(); pItem != NULL; pItem = pItem->GetNext())
+		{
+			if (!pItem->IsType(IT_EQ_MEMORY_OBJ))
+				continue;
+			if (pItem->m_uidLink != uid)
+				continue;
+
+			pMemory = static_cast<CItemMemory *>(pItem);
+
+			if (pMemory->IsMemoryTypes(MemTypes))
+			{
+				return pMemory;
+			}
+		}
+
+		return NULL;
 	}
 	// ------------------------------------------------------------
 
