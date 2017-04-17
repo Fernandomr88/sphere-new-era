@@ -214,11 +214,11 @@ CResource::CResource()
 	m_iColorNotoInvul = 0x35;				// yellow
 	m_iColorNotoInvulGameMaster = 0x0b;		// purple
 	m_iColorNotoDefault = 0x3b2;			// grey (if not any other)
-	
+
 	m_iColorInvis = 0;
 	m_iColorInvisSpell = 0;
 	m_iColorHidden = 0;
-	
+
 	m_iNotoTimeout = 30;					// seconds to remove this character from notoriety list.
 
 	m_iPetsInheritNotoriety = 0;
@@ -586,7 +586,7 @@ enum RC_TYPE
 	RC_WORLDSAVE,
 	RC_ZEROPOINT,				// m_sZeroPoint
 	RC_QTY
-}; 
+};
 
 
 const CAssocReg CResource::sm_szLoadKeys[RC_QTY+1] =
@@ -902,7 +902,7 @@ bool CResource::r_LoadVal( CScript &s )
 						}
 					}
 				}
-	
+
 				DEBUG_ERR(("Bad usage of MAPx. Check your " GRAY_FILE ".ini or scripts (SERV.MAP is a read only property)\n"));
 				return false;
 			}
@@ -1170,7 +1170,7 @@ bool CResource::r_LoadVal( CScript &s )
 		case RC_TOOLTIPCACHE:
 			g_Cfg.m_iTooltipCache = s.GetArgVal() * TICK_PER_SEC;
 			break;
-			
+
 #ifdef _MTNETWORK
 		case RC_NETWORKTHREADS:
 			if (g_Serv.IsLoading())
@@ -1300,7 +1300,7 @@ bool CResource::r_WriteVal( LPCTSTR pszKey, CGString & sVal, CTextConsole * pSrc
 			pszKey = pszArgsNext;
 			SKIP_SEPARATORS(pszKey);
 			return pt.r_WriteVal(pszKey, sVal);
-		} 
+		}
 
 		if ( !strnicmp( pszKey, "MAPLIST.",8) )
 		{
@@ -1349,7 +1349,7 @@ bool CResource::r_WriteVal( LPCTSTR pszKey, CGString & sVal, CTextConsole * pSrc
 			if ( g_MapList.IsMapSupported(iMapNumber) )
 			{
 				if ( !strnicmp( pszKey, "SECTOR", 6 ))
-				{ 
+				{
 					pszKey = pszKey + 6;
 					int iSecNumber = Exp_GetVal(pszKey);
 					SKIP_SEPARATORS(pszKey);
@@ -1366,7 +1366,7 @@ bool CResource::r_WriteVal( LPCTSTR pszKey, CGString & sVal, CTextConsole * pSrc
 			}
 			g_Log.EventError("Unsupported Map %d\n", iMapNumber);
 			return false;
-		} 
+		}
 
 		if (!strnicmp( pszKey, "FUNCTIONS.", 10))
 		{
@@ -1794,7 +1794,7 @@ LPCTSTR CResource::GetNotoTitle( int iLevel, bool bFemale ) const
 		pFemaleTitle++;
 		if (bFemale)
 			return pFemaleTitle;
-		
+
 		// copy string so that it can be null-terminated without modifying m_NotoTitles
 		TCHAR* pTitle = Str_GetTemp();
 		strcpylen(pTitle, m_NotoTitles[iLevel]->GetPtr(), m_NotoTitles[iLevel]->GetLength() - strlen(pFemaleTitle));
@@ -2291,6 +2291,18 @@ bool CResource::LoadResourceSection( CScript * pScript )
 		// NOTE: rid is not created for all types.
 		// NOTE: GetArgStr() is not always the DEFNAME
 		rid = ResourceGetNewID( restype, pScript->GetArgStr(), &pVarNum, fNewStyleDef );
+
+		if (restype == RES_ITEMDEF && g_Serv.m_iModeCode != SERVMODE_ResyncLoad && m_ResHash.FindKey( rid ) != m_ResHash.BadIndex())
+		{
+			if (fNewStyleDef)
+			{
+				DEBUG_ERR(("You must put scripts with multi files at the top of your spheretables.scp. Conflicting IDs for [%s %s] rid.GetPrivateUID() %d rid.GetResIndex() %d\n", pszSection, pScript->GetArgStr(), rid.GetPrivateUID(), rid.GetResIndex()));
+				return(false);
+			} else
+			{
+				DEBUG_ERR(("Redef [%s %s]\n", pszSection, pScript->GetArgStr()));
+			}
+		}
 	}
 
 	if ( !rid.IsValidUID() )
@@ -2395,7 +2407,7 @@ bool CResource::LoadResourceSection( CScript * pScript )
 		{
 			while ( pScript->ReadKey())
 			{
-				LPCTSTR pName = pScript->GetKeyBuffer();	
+				LPCTSTR pName = pScript->GetKeyBuffer();
 				m_ResourceList.AddSortString( pName );
 			}
 		}
@@ -2408,7 +2420,7 @@ bool CResource::LoadResourceSection( CScript * pScript )
 				LPCTSTR pName = pScript->GetKeyBuffer();
 				if ( *pName == '<' )
 					pName = "";
-				
+
 				m_Fame.SetAtGrow( i, new CGString(pName) );
 				++i;
 			}
@@ -2422,7 +2434,7 @@ bool CResource::LoadResourceSection( CScript * pScript )
 				LPCTSTR pName = pScript->GetKeyBuffer();
 				if ( *pName == '<' )
 					pName = "";
-				
+
 				m_Karma.SetAtGrow( i, new CGString(pName) );
 				++i;
 			}
@@ -3759,7 +3771,7 @@ bool CResource::Load( bool fResync )
 		CScript script("EVENTSITEM", m_sEventsItem);
 		m_iEventsItemLink.r_LoadVal(script, RES_EVENTS);
 	}
-	
+
 	// parse eventspet
 	m_pEventsPetLink.Empty();
 	if ( ! m_sEventsPet.IsEmpty() )
@@ -3923,7 +3935,7 @@ bool CResource::DumpUnscriptedItems( CTextConsole * pSrc, LPCTSTR pszFilename )
 		pszFilename	= "unscripted_items" GRAY_SCRIPT;
 	else if ( strlen( pszFilename ) <= 4 )
 		return false;
-	
+
 	// open file
 	CScript s;
 	if ( ! s.Open( pszFilename, OF_WRITE|OF_TEXT|OF_DEFAULTMODE ))
@@ -3957,7 +3969,7 @@ bool CResource::DumpUnscriptedItems( CTextConsole * pSrc, LPCTSTR pszFilename )
 		// ensure there is actually some data here, treat "MissingName" as blank since some tiledata.muls
 		// have this name set in blank slots
 		if ( !tiledata.m_flags && !tiledata.m_weight && !tiledata.m_layer &&
-			 !tiledata.m_dwUnk11 && !tiledata.m_dwAnim && !tiledata.m_wUnk19 && !tiledata.m_height && 
+			 !tiledata.m_dwUnk11 && !tiledata.m_dwAnim && !tiledata.m_wUnk19 && !tiledata.m_height &&
 			 (!tiledata.m_name[0] || strcmp(tiledata.m_name, "MissingName") == 0))
 			 continue;
 
