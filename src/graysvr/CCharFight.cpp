@@ -1903,8 +1903,11 @@ effect_bounce:
 	}
 
 	CScriptTriggerArgs Args( iDmg, uType, static_cast<INT64>(0) );
-	Args.m_VarsLocal.SetNum("ItemDamageLayer", sm_ArmorDamageLayers[Calc_GetRandVal(COUNTOF(sm_ArmorDamageLayers))]);
-	Args.m_VarsLocal.SetNum("ItemDamageChance", 40);
+	if ( !(uType & DAMAGE_POISON) )
+	{
+		Args.m_VarsLocal.SetNum("ItemDamageLayer", sm_ArmorDamageLayers[Calc_GetRandVal(COUNTOF(sm_ArmorDamageLayers))]);
+		Args.m_VarsLocal.SetNum("ItemDamageChance", 40);
+	}
 
 	if ( IsTrigUsed(TRIGGER_GETHIT) )
 	{
@@ -1915,9 +1918,9 @@ effect_bounce:
 	}
 
 	int iItemDamageChance = static_cast<int>(Args.m_VarsLocal.GetKeyNum("ItemDamageChance"));
+	LAYER_TYPE iItemDamageLayer = static_cast<LAYER_TYPE>(Args.m_VarsLocal.GetKeyNum("ItemDamageLayer"));
 	if ( (iItemDamageChance > Calc_GetRandVal(100)) && !pCharDef->Can(CAN_C_NONHUMANOID) )
 	{
-		LAYER_TYPE iHitLayer = static_cast<LAYER_TYPE>(Args.m_VarsLocal.GetKeyNum("ItemDamageLayer"));
 		CItem *pItemHit = LayerFind(iHitLayer);
 		if ( pItemHit )
 			pItemHit->OnTakeDamage(iDmg, pSrc, uType);
