@@ -1921,7 +1921,7 @@ effect_bounce:
 	LAYER_TYPE iItemDamageLayer = static_cast<LAYER_TYPE>(Args.m_VarsLocal.GetKeyNum("ItemDamageLayer"));
 	if ( (iItemDamageChance > Calc_GetRandVal(100)) && !pCharDef->Can(CAN_C_NONHUMANOID) )
 	{
-		CItem *pItemHit = LayerFind(iHitLayer);
+		CItem *pItemHit = LayerFind(iItemDamageLayer);
 		if ( pItemHit )
 			pItemHit->OnTakeDamage(iDmg, pSrc, uType);
 	}
