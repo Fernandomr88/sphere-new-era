@@ -3113,16 +3113,21 @@ CRegionBase * CChar::CanMoveWalkTo( CPointBase & ptDst, bool fCheckChars, bool f
 				return NULL;
 
 			TCHAR *pszMsg = Str_GetTemp();
-			if ( Stat_GetVal(STAT_DEX) < iStamReq )		// check if we have enough stamina to push the char
+			if ( pChar->IsStatFlag(STATF_Invisible) )
+			{
+				sprintf(pszMsg, g_Cfg.GetDefaultMsg(DEFMSG_MSG_INVISIBLE), pChar->GetName());
+				continue;
+			}
+			else if ( pChar->IsStatFlag(STATF_Hidden) )
+			{
+				sprintf(pszMsg, g_Cfg.GetDefaultMsg(DEFMSG_HIDING_STUMBLE), pChar->GetName());
+				pChar->Reveal(STATF_Hidden);
+			}
+			else if ( Stat_GetVal(STAT_DEX) < iStamReq )		// check if we have enough stamina to push the char
 			{
 				sprintf(pszMsg, g_Cfg.GetDefaultMsg(DEFMSG_MSG_CANTPUSH), pChar->GetName());
 				SysMessage(pszMsg);
 				return NULL;
-			}
-			else if ( pChar->IsStatFlag(STATF_Invisible|STATF_Hidden) )
-			{
-				sprintf(pszMsg, g_Cfg.GetDefaultMsg(DEFMSG_HIDING_STUMBLE), pChar->GetName());
-				pChar->Reveal(STATF_Invisible|STATF_Hidden);
 			}
 			else if ( pChar->IsStatFlag(STATF_Sleeping) )
 				sprintf(pszMsg, g_Cfg.GetDefaultMsg(DEFMSG_MSG_STEPON_BODY), pChar->GetName());
