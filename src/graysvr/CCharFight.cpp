@@ -278,7 +278,7 @@ NOTO_TYPE CChar::Noto_CalcFlag(const CChar *pCharViewer, bool bAllowInvul) const
 		}
 
 		// If they saw me commit a crime or I am their aggressor then criminal to just them
-		CItemMemory *pMemory = pCharViewer->Memory_FindObjTypes(this, MEMORY_SAWCRIME|MEMORY_AGGREIVED|MEMORY_HARMEDBY);
+		CItemMemory *pMemory = pCharViewer->Memory_FindObjTypes(this, MEMORY_SAWCRIME|MEMORY_AGGREIVED);
 		if ( pMemory )
 			return NOTO_CRIMINAL;
 	}

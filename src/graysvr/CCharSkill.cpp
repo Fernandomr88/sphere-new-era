@@ -309,7 +309,7 @@ void CChar::Stat_SetBase( STAT_TYPE i, short iVal )
 		default:
 			throw CGrayError(LOGL_CRIT, 0, "Stat_SetBase: index out of range");
 	}
-	
+
 	m_Stat[i].m_base = iVal;
 
 	if ( i == STAT_STR && iVal < iStatVal )
@@ -566,7 +566,7 @@ WORD CChar::Skill_GetMax( SKILL_TYPE skill, bool ignoreLock ) const
 			iSkillMax = static_cast<WORD>(pTagStorage->GetValNum());
 		else
 			iSkillMax = pSkillClass->m_SkillLevelMax[skill];
-		
+
 		if ( !ignoreLock )
 		{
 			if ( m_pPlayer->Skill_GetLock(skill) >= SKILLLOCK_DOWN )
@@ -699,12 +699,12 @@ void CChar::Skill_Experience( SKILL_TYPE skill, int difficulty )
 
 	CScriptTriggerArgs pArgs( 0 , iChance, iSkillMax);
 	if ( IsTrigUsed(TRIGGER_SKILLGAIN) )
-	{	
+	{
 		if ( Skill_OnCharTrigger( skill, CTRIG_SkillGain, &pArgs ) == TRIGRET_RET_TRUE )
 			return;
 	}
 	if ( IsTrigUsed(TRIGGER_GAIN) )
-	{	
+	{
 		if ( Skill_OnTrigger( skill, SKTRIG_GAIN, &pArgs ) == TRIGRET_RET_TRUE )
 			return;
 	}
@@ -867,7 +867,7 @@ WORD CChar::Stats_GetRegenVal(STAT_TYPE iStat, bool bGetTicks)
 	// Return regen rates and regen val for the given stat.
 	// bGetTicks = true returns the regen ticks
 	// bGetTicks = false returns the values of regeneration.
-	
+
 	LPCTSTR stat = "";
 	switch ( iStat )
 	{
@@ -1034,7 +1034,7 @@ bool CChar::Skill_UseQuick( SKILL_TYPE skill, INT64 difficulty, bool bAllowGain,
 		else if ( ret == TRIGRET_RET_FALSE )
 			return( false );
 	}
-	
+
 	if ( result )	// success
 	{
 		if ( bAllowGain )
@@ -1458,12 +1458,12 @@ CItem * CChar::Skill_NaturalResource_Create( CItem * pResBit, SKILL_TYPE skill )
 		tRet = OnTrigger(CTRIG_RegionResourceGather, this, &Args);
 	if ( IsTrigUsed(TRIGGER_RESOURCEGATHER) )
 		tRet = pOreDef->OnTrigger("@ResourceGather", this, &Args);
-	
-	if ( tRet == TRIGRET_RET_TRUE ) 
+
+	if ( tRet == TRIGRET_RET_TRUE )
 	{
 		return( NULL );
 	}
-	else 
+	else
 	{
 		//Creating the 'id' variable with the local given through->by the trigger(s) instead on top of method
 		ITEMID_TYPE id = static_cast<ITEMID_TYPE>(RES_GET_INDEX( Args.m_VarsLocal.GetKeyNum("ResourceID")));
@@ -1905,12 +1905,12 @@ int CChar::Skill_Fishing( SKTRIG_TYPE stage )
 }
 
 int CChar::Skill_Lumberjack( SKTRIG_TYPE stage )
-{	
+{
 	ADDTOCALLSTACK("CChar::Skill_Lumberjack");
 	// SKILL_LUMBERJACK
 	// m_Act_p = the point we want to chop/hack at.
 	// m_Act_TargPrv = Axe/Dagger
-	// NOTE: The skill is used for hacking with IT_FENCE (e.g. i_dagger) 
+	// NOTE: The skill is used for hacking with IT_FENCE (e.g. i_dagger)
 	//
 	// RETURN:
 	//   difficulty = 0-100
@@ -2026,8 +2026,7 @@ int CChar::Skill_DetectHidden( SKTRIG_TYPE stage )
 	if ( !(g_Cfg.m_iRevealFlags & REVEALF_DETECTINGHIDDEN) )	// skill succeeded, but effect is disabled
 		return 0;
 
-	int iSkill = Skill_GetAdjusted(SKILL_DETECTINGHIDDEN);
-	int iRadius = iSkill / 100;
+	int iRadius = ( Skill_GetAdjusted(SKILL_DETECTINGHIDDEN) / 8 ) + 1;
 
 	CWorldSearch Area(GetTopPoint(), iRadius);
 	bool bFound = false;
@@ -2037,12 +2036,6 @@ int CChar::Skill_DetectHidden( SKTRIG_TYPE stage )
 		if ( pChar == NULL )
 			break;
 		if ( pChar == this || !pChar->IsStatFlag(STATF_Invisible|STATF_Hidden) )
-			continue;
-
-		// Check chance to reveal the target
-		int iSkillSrc = iSkill + Calc_GetRandVal(210) - 100;
-		int iSkillTarg = pChar->Skill_GetAdjusted(SKILL_HIDING) + Calc_GetRandVal(210) - 100;
-		if ( iSkillSrc < iSkillTarg )
 			continue;
 
 		pChar->Reveal();
@@ -2180,7 +2173,7 @@ int CChar::Skill_Enticement( SKTRIG_TYPE stage )
 				pChar->NPC_WalkToPoint( ( pChar->m_Act_p.GetDist(pChar->GetTopPoint()) > 3) );
 				return 0;
 			}
-			
+
 		default:
 			break;
 	}
@@ -2511,7 +2504,7 @@ int CChar::Skill_Taming( SKTRIG_TYPE stage )
 	pMemory = pChar->Memory_AddObjTypes(this, MEMORY_SPEAK);
 	if ( pMemory )
 		pMemory->m_itEqMemory.m_Action = NPC_MEM_ACT_TAMED;
-		
+
 	return 0;
 }
 
@@ -3101,7 +3094,7 @@ int CChar::Skill_MakeItem( SKTRIG_TYPE stage )
 	// m_Act_Targ = the item we want to be part of this process.
 	// m_atCreate.m_ItemID = new item we are making
 	// m_atCreate.m_Amount = amount of said item.
-	
+
 	if ( stage == SKTRIG_START )
 		return m_Act_Difficulty;	// keep the already set difficulty
 
@@ -3378,7 +3371,7 @@ int CChar::Skill_Act_Throwing( SKTRIG_TYPE stage )
 		if ( ! Calc_GetRandVal( pChar->GetTopPoint().GetDist( m_Act_p )))	// did it hit?
 			pChar->OnTakeDamage( iDamage, this, DAMAGE_HIT_BLUNT );
 	}
-	
+
 	return 0;
 }
 
@@ -3743,7 +3736,7 @@ TRIGRET_TYPE CChar::Skill_OnTrigger( SKILL_TYPE skill, SKTRIG_TYPE stage )
  	CScriptTriggerArgs pArgs;
  	return Skill_OnTrigger(skill, stage, &pArgs);
  }
- 
+
 TRIGRET_TYPE CChar::Skill_OnTrigger( SKILL_TYPE skill, SKTRIG_TYPE stage, CScriptTriggerArgs *pArgs )
 {
 	ADDTOCALLSTACK("CChar::Skill_OnTrigger");

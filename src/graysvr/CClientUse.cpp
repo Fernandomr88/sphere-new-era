@@ -615,7 +615,7 @@ void CClient::Cmd_EditItem( CObjBase *pObj, int iSelect )
 			OnTarg_Obj_Set(CGrayUID(m_tmMenu.m_Item[static_cast<size_t>(iSelect)]).ObjFind());
 		return;
 	}
-	
+
 	CMenuItem item[minimum(COUNTOF(m_tmMenu.m_Item), MAX_MENU_ITEMS)];	// Most as we want to display at one time.
 	item[0].m_sText.Format("Contents of %s", pObj->GetName());
 
@@ -642,7 +642,7 @@ void CClient::Cmd_EditItem( CObjBase *pObj, int iSelect )
 		if ( count >= (COUNTOF(item) - 1) )
 			break;
 	}
-	
+
 	ASSERT(count < COUNTOF(item));
 	addItemMenu(CLIMODE_MENU_EDIT, item, count, pObj);
 }
@@ -710,7 +710,7 @@ bool CClient::Cmd_Skill_Menu( RESOURCE_ID_BASE rid, int iSelect )
 		if ( g_Cfg.m_wDebugFlags & DEBUGF_SCRIPTS )
 			g_Log.EventDebug("SCRIPT: Too many empty skill menus to continue seeking through menu '%s'\n", g_Cfg.ResourceGetDef(rid)->GetResourceName());
 	}
-	
+
 	ASSERT(iShowCount < COUNTOF(item));
 	addItemMenu(CLIMODE_MENU_SKILL, item, iShowCount);
 	return true;
@@ -1060,6 +1060,8 @@ bool CClient::Cmd_Skill_Tracking( WORD track_sel, bool bExec )
 			return true;
 		}
 
+		bool fGM = IsPriv(PRIV_GM);
+
 		static const NPCBRAIN_TYPE sm_Track_Brain[] =
 		{
 			NPCBRAIN_QTY,	// not used here
@@ -1079,7 +1081,7 @@ bool CClient::Cmd_Skill_Tracking( WORD track_sel, bool bExec )
 		item[0].m_sText = g_Cfg.GetDefaultMsg(DEFMSG_TRACKING_SKILLMENU_TITLE);
 		m_tmMenu.m_Item[0] = track_sel;
 
-		CWorldSearch AreaChars(m_pChar->GetTopPoint(), m_pChar->Skill_GetBase(SKILL_TRACKING) / 10 + 10);
+		CWorldSearch AreaChars(m_pChar->GetTopPoint(), m_pChar->Skill_GetBase(SKILL_TRACKING) / 20 + 10);
 		for (;;)
 		{
 			CChar *pChar = AreaChars.GetChar();
@@ -1088,40 +1090,32 @@ bool CClient::Cmd_Skill_Tracking( WORD track_sel, bool bExec )
 			if ( pChar == m_pChar )
 				continue;
 
+			if ( GetPrivLevel() < pChar->GetPrivLevel() && pChar->IsStatFlag(STATF_Insubstantial) )
+				continue;
+
 			if ( pChar->GetNPCBrain() != track_type )
 				continue;
 			if ( pChar->IsStatFlag(STATF_DEAD) )	// can't track ghosts
 				continue;
 
-			if ( pChar->m_pPlayer )
-			{
-				// Prevent track hidden GMs
-				if ( pChar->IsStatFlag(STATF_Insubstantial) && (pChar->GetPrivLevel() > GetPrivLevel()) )
-					continue;
-
-				// Check action difficulty when trying to track players
-				int tracking = m_pChar->Skill_GetBase(SKILL_TRACKING);
-				int detectHidden = m_pChar->Skill_GetBase(SKILL_DETECTINGHIDDEN);
-				if ( (g_Cfg.m_iRacialFlags & RACIALF_ELF_DIFFTRACK) && pChar->IsElf() )
-					tracking /= 2;			// elves are more difficult to track (Difficult to Track racial trait)
-
-				int hiding = pChar->Skill_GetBase(SKILL_HIDING);
-				int stealth = pChar->Skill_GetBase(SKILL_STEALTH);
-				int divisor = maximum(hiding + stealth, 1);
-
-				int chance;
-				if ( g_Cfg.m_iFeatureSE & FEATURE_SE_UPDATE )
-					chance = 50 * (tracking * 2 + detectHidden) / divisor;
-				else
-					chance = 50 * (tracking + detectHidden + 10 * Calc_GetRandVal(20)) / divisor;
-
-				if ( Calc_GetRandVal(100) > chance )
-					continue;
-			}
-
 			CCharBase *pCharDef = pChar->Char_GetDef();
 			if ( !pCharDef )
 				continue;
+
+			NPCBRAIN_TYPE basic_type = pChar->GetNPCBrain();
+			if ( track_type != basic_type && track_type != NPCBRAIN_QTY )
+			{
+				if ( track_type != NPCBRAIN_NONE )		// no match.
+				{
+					continue;
+				}
+
+				// players
+				if ( ! pChar->m_pPlayer )
+					continue;
+				if ( ! fGM && basic_type != NPCBRAIN_HUMAN )	// can't track polymorphed person.
+					continue;
+			}
 
 			count++;
 			item[count].m_id = static_cast<WORD>(pCharDef->m_trackID);
