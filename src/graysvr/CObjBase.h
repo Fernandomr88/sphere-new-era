@@ -2626,7 +2626,6 @@ enum CTRIG_TYPE
 	CTRIG_UserExtCmd,
 	CTRIG_UserExWalkLimit,
 	CTRIG_UserGuildButton,
-	CTRIG_UserKRToolbar,
 	CTRIG_UserMailBag,
 	CTRIG_UserQuestArrowClick,
 	CTRIG_UserQuestButton,
@@ -2634,8 +2633,9 @@ enum CTRIG_TYPE
 	CTRIG_UserSpecialMove,
 	CTRIG_UserStats,
 	CTRIG_UserVirtue,
-	CTRIG_UserVirtueInvoke,
 	CTRIG_UserWarmode,
+	CTRIG_UserVirtueInvoke,
+	CTRIG_UserKRToolbar,
 
 	CTRIG_QTY				// 130
 };

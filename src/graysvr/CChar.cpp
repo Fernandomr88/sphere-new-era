@@ -175,7 +175,6 @@ LPCTSTR const CChar::sm_szTrigName[CTRIG_QTY+1] =	// static
 	"@UserExtCmd",
 	"@UserExWalkLimit",
 	"@UserGuildButton",
-	"@UserKRToolbar",
 	"@UserMailBag",
 	"@UserQuestArrowClick",
 	"@UserQuestButton",
@@ -183,9 +182,9 @@ LPCTSTR const CChar::sm_szTrigName[CTRIG_QTY+1] =	// static
 	"@UserSpecialMove",
 	"@UserStats",
 	"@UserVirtue",
-	"@UserVirtueInvoke",
 	"@UserWarmode",
-
+	"@UserVirtueInvoke",
+	"@UserKRToolbar",
 	// War mode ?
 	 NULL,
 };
