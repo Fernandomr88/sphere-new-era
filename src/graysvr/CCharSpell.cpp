@@ -117,8 +117,9 @@ bool CChar::Spell_Teleport(CPointMap ptNew, bool bTakePets, bool bCheckAntiMagic
 	CPointMap ptOld = GetTopPoint();
 	if ( ptOld.IsValidPoint() )		// guards might have just been created
 	{
-		if ( bTakePets )	// look for any creatures that might be following me nearby
-		{
+
+		if ( bTakePets ) {	// look for any creatures that might be following me nearby
+
 			CWorldSearch Area(ptOld, UO_MAP_VIEW_SIGHT);
 			for (;;)
 			{
@@ -130,8 +131,19 @@ bool CChar::Spell_Teleport(CPointMap ptNew, bool bTakePets, bool bCheckAntiMagic
 
 				if ( (pChar->Skill_GetActive() == NPCACT_FOLLOW_TARG) && (pChar->m_Act_Targ == GetUID()) )	// my pet?
 				{
-					if ( pChar->CanMoveWalkTo(ptOld, false, true) )
-						pChar->Spell_Teleport(ptNew, bTakePets, bCheckAntiMagic, bDisplayEffect, iEffect, iSound);
+					if (IsTrigUsed(TRIGGER_FOLLOWMYMASTER)) {
+						if ( pChar->OnTrigger(CTRIG_FollowMyMaster, this) == TRIGRET_RET_TRUE) {
+							break;
+						}
+						else {
+							if (pChar->CanMoveWalkTo(ptOld, false, true))
+								pChar->Spell_Teleport(ptNew, bTakePets, bCheckAntiMagic, bDisplayEffect, iEffect, iSound);
+						}
+					}
+					else {
+						if (pChar->CanMoveWalkTo(ptOld, false, true))
+							pChar->Spell_Teleport(ptNew, bTakePets, bCheckAntiMagic, bDisplayEffect, iEffect, iSound);
+					}
 				}
 			}
 		}
