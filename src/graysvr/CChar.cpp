@@ -42,6 +42,7 @@ LPCTSTR const CChar::sm_szTrigName[CTRIG_QTY+1] =	// static
 
 	"@FameChange",				// Fame changed
 	"@FollowersUpdate",
+	"@FollowMyMaster",			//Am I going to follow my master through teleport?
 
 	"@GetHit",				// I just got hit.
 	"@Hit",					// I just hit someone. (TARG)
@@ -133,6 +134,8 @@ LPCTSTR const CChar::sm_szTrigName[CTRIG_QTY+1] =	// static
 	"@Resurrect",
 	"@SeeCrime",		// I saw a crime
 	"@SeeHidden",			// Can I see hidden chars?
+	"@SeeItem",
+	"@SeeNpc",
 	"@SeeSnoop",
 
 	// SKTRIG_QTY
@@ -172,7 +175,6 @@ LPCTSTR const CChar::sm_szTrigName[CTRIG_QTY+1] =	// static
 	"@UserExtCmd",
 	"@UserExWalkLimit",
 	"@UserGuildButton",
-	"@UserKRToolbar",
 	"@UserMailBag",
 	"@UserQuestArrowClick",
 	"@UserQuestButton",
@@ -180,9 +182,9 @@ LPCTSTR const CChar::sm_szTrigName[CTRIG_QTY+1] =	// static
 	"@UserSpecialMove",
 	"@UserStats",
 	"@UserVirtue",
-	"@UserVirtueInvoke",
 	"@UserWarmode",
-
+	"@UserVirtueInvoke",
+	"@UserKRToolbar",
 	// War mode ?
 	 NULL,
 };

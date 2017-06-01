@@ -901,6 +901,20 @@ bool CChar::CanSee( const CObjBaseTemplate *pObj ) const
 		if ( !pItem || !CanSeeItem(pItem) )
 			return false;
 
+		if ( (IsTrigUsed(TRIGGER_SEEITEM)) && (!IsPriv(PRIV_GM)) ) {
+			if ( CanSeeItem(pItem) ) {
+				CScriptTriggerArgs Args;
+				Args.m_iN1 = 1;
+				CItem *pItem2 = const_cast<CItem*>(pItem); //I
+				CChar *this2 = const_cast<CChar*>(this); //src
+				Args.m_pO1 = pItem2;
+				this2->OnTrigger(CTRIG_SeeItem, this2, &Args);
+				if (Args.m_iN1 == 0) {
+					return (Args.m_iN1 != 0);
+				}
+			}
+		}
+
 		CObjBase *pObjCont = pItem->GetParentObj();
 		if ( pObjCont )
 		{
@@ -972,6 +986,18 @@ bool CChar::CanSee( const CObjBaseTemplate *pObj ) const
 			{
 				if ( GetPrivLevel() < pChar->GetPrivLevel() )
 					return false;
+			}
+		}
+
+		if ( (IsTrigUsed(TRIGGER_SEENPC)) && (pChar->m_pNPC) && (!IsPriv( PRIV_GM )) )
+		{
+			CScriptTriggerArgs Args;
+			Args.m_iN1 = 1;
+			CChar *pChar2 = const_cast<CChar*>(pChar);
+			CChar *this2 = const_cast<CChar*>(this);
+			this2->OnTrigger(CTRIG_SeeNpc, pChar2, &Args);
+			if (Args.m_iN1 == 0) {
+				return (Args.m_iN1 != 0);
 			}
 		}
 
@@ -1460,7 +1486,7 @@ bool CChar::CanSeeLOS_New( const CPointMap &ptDst, CPointMap *pptBlock, int iMax
 
 						Height = (wTFlags & UFLAG2_CLIMBABLE) ? Height / 2 : Height;
 
-						if ( ((wTFlags & (UFLAG1_WALL|UFLAG1_BLOCK|UFLAG2_PLATFORM)) || pItemDef->m_Can & CAN_I_BLOCKLOS) && !((wTFlags & UFLAG2_WINDOW) && (flags & LOS_NB_WINDOWS)) )
+						if ( ((wTFlags & (UFLAG1_WALL|UFLAG1_BLOCK|UFLAG2_PLATFORM)) || (pItemDef->m_Can & CAN_I_BLOCKLOS)) && !((wTFlags & UFLAG2_WINDOW) && (flags & LOS_NB_WINDOWS)) )
 						{
 							WARNLOS(("pItem %0lx(%0x) %d,%d,%d - %d\n", static_cast<DWORD>(pItem->GetUID()), pItem->GetDispID(), pItem->GetTopPoint().m_x, pItem->GetTopPoint().m_y, pItem->GetTopPoint().m_z, Height));
 							min_z = pItem->GetTopZ();

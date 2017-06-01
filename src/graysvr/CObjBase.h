@@ -2491,6 +2491,8 @@ enum CTRIG_TYPE
 
 	CTRIG_FollowersUpdate,	// Adding or removing CurFollowers.
 
+	CTRIG_FollowMyMaster,	// Am I going to follow my master if he teleports/gate/recall?
+
 	CTRIG_GetHit,			// I just got hit.
 	CTRIG_Hit,				// I just hit someone. (TARG)
 	CTRIG_HitCheck,
@@ -2582,6 +2584,8 @@ enum CTRIG_TYPE
 
 	CTRIG_SeeCrime,			// I am seeing a crime
 	CTRIG_SeeHidden,		// I'm about to see a hidden char
+	CTRIG_SeeItem,
+	CTRIG_SeeNpc,
 	CTRIG_SeeSnoop,			// I see someone Snooping something.
 
 	// SKTRIG_QTY
@@ -2622,7 +2626,6 @@ enum CTRIG_TYPE
 	CTRIG_UserExtCmd,
 	CTRIG_UserExWalkLimit,
 	CTRIG_UserGuildButton,
-	CTRIG_UserKRToolbar,
 	CTRIG_UserMailBag,
 	CTRIG_UserQuestArrowClick,
 	CTRIG_UserQuestButton,
@@ -2630,8 +2633,9 @@ enum CTRIG_TYPE
 	CTRIG_UserSpecialMove,
 	CTRIG_UserStats,
 	CTRIG_UserVirtue,
-	CTRIG_UserVirtueInvoke,
 	CTRIG_UserWarmode,
+	CTRIG_UserVirtueInvoke,
+	CTRIG_UserKRToolbar,
 
 	CTRIG_QTY				// 130
 };
@@ -3083,6 +3087,7 @@ public:
 		}
 		return true;
 	}
+	
 	bool CanTouch( const CPointMap & pt ) const;
 	bool CanTouch( const CObjBase * pObj ) const;
 	IT_TYPE CanTouchStatic( CPointMap & pt, ITEMID_TYPE id, CItem * pItem );
