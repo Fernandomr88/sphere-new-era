@@ -3978,7 +3978,7 @@ private:
 public:
 	bool NPC_OnHirePay( CChar * pCharSrc, CItemMemory * pMemory, CItem * pGold );
 	bool NPC_OnHireHear( CChar * pCharSrc );
-	WORD NPC_OnTrainCheck( CChar * pCharSrc, SKILL_TYPE Skill );
+	short NPC_OnTrainCheck( CChar * pCharSrc, SKILL_TYPE Skill );
 	bool NPC_OnTrainPay( CChar * pCharSrc, CItemMemory * pMemory, CItem * pGold );
 	bool NPC_OnTrainHear( CChar * pCharSrc, LPCTSTR pCmd );
 	bool NPC_TrainSkill( CChar * pCharSrc, SKILL_TYPE skill, WORD toTrain );

@@ -464,7 +464,7 @@ void CChar::NPC_OnHear( LPCTSTR pszCmd, CChar * pSrc, bool fAllPets )
 	}
 }
 
-WORD CChar::NPC_OnTrainCheck( CChar * pCharSrc, SKILL_TYPE Skill )
+short CChar::NPC_OnTrainCheck( CChar * pCharSrc, SKILL_TYPE Skill )
 {
 	ADDTOCALLSTACK("CChar::NPC_OnTrainCheck");
 	// Can we train in this skill ?
@@ -478,10 +478,10 @@ WORD CChar::NPC_OnTrainCheck( CChar * pCharSrc, SKILL_TYPE Skill )
 
 	WORD iSkillSrcVal = pCharSrc->Skill_GetBase(Skill);
 	WORD iSkillVal = Skill_GetBase(Skill);
-	WORD iTrainVal = NPC_GetTrainMax(pCharSrc, Skill) - iSkillSrcVal;
+	short iTrainVal = NPC_GetTrainMax(pCharSrc, Skill) - iSkillSrcVal;
 
 	// Train npc skill cap
-	WORD iMaxDecrease = 0;
+	short iMaxDecrease = 0;
 	if ( (pCharSrc->GetSkillTotal() + iTrainVal) > pCharSrc->Skill_GetMax(static_cast<SKILL_TYPE>(g_Cfg.m_iMaxSkill)) )
 	{	
 		for ( size_t i = 0; i < g_Cfg.m_iMaxSkill; i++ )
@@ -533,7 +533,7 @@ bool CChar::NPC_OnTrainPay(CChar *pCharSrc, CItemMemory *pMemory, CItem * pGold)
 		return false;
 	}
 
-	WORD iTrainCost = static_cast<WORD>(GetKeyNum("OVERRIDE.TRAINSKILLCOST"));
+	short iTrainCost = static_cast<WORD>(GetKeyNum("OVERRIDE.TRAINSKILLCOST"));
 	if ( !iTrainCost )
 		iTrainCost = g_Cfg.m_iTrainSkillCost;
 
@@ -641,7 +641,7 @@ bool CChar::NPC_OnTrainHear( CChar * pCharSrc, LPCTSTR pszCmd )
 			continue;
 
 		// Can we train in this ?
-		WORD iTrainCost = NPC_OnTrainCheck(pCharSrc, static_cast<SKILL_TYPE>(i)) * g_Cfg.m_iTrainSkillCost;
+		short iTrainCost = NPC_OnTrainCheck(pCharSrc, static_cast<SKILL_TYPE>(i)) * g_Cfg.m_iTrainSkillCost;
 		if ( iTrainCost <= 0 )
 			return true;
 
@@ -668,7 +668,7 @@ bool CChar::NPC_OnTrainHear( CChar * pCharSrc, LPCTSTR pszCmd )
 		if ( !g_Cfg.m_SkillIndexDefs.IsValidIndex(static_cast<SKILL_TYPE>(i)) )
 			continue;
 
-		WORD iDiff = NPC_GetTrainMax(pCharSrc, static_cast<SKILL_TYPE>(i)) - pCharSrc->Skill_GetBase(static_cast<SKILL_TYPE>(i));
+		short iDiff = NPC_GetTrainMax(pCharSrc, static_cast<SKILL_TYPE>(i)) - pCharSrc->Skill_GetBase(static_cast<SKILL_TYPE>(i));
 		if ( iDiff <= 0 )
 			continue;
 
