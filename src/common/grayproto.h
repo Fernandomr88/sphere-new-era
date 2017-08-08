@@ -1124,7 +1124,7 @@ struct CEventCharDef
 struct CEvent	// event buffer from client to server..
 {
 #define MAX_BUFFER			15360	// Buffer Size (For socket operations)
-#define MAX_ITEMS_CONT		125		// Max items in a container. (arbitrary)
+#define MAX_ITEMS_CONT		250		// Max items in a container. (arbitrary)
 #define MAX_MENU_ITEMS		64		// number of items in a menu. (arbitrary)
 #define MAX_CHARS_PER_ACCT	7
 
