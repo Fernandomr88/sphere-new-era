@@ -373,6 +373,7 @@ enum ISPW_TYPE
 	ISPW_AT,
 	ISPW_COUNT,
 	ISPW_DELOBJ,
+	ISPW_FORCERESTART,
 	ISPW_RESET,
 	ISPW_START,
 	ISPW_STOP,
@@ -386,6 +387,7 @@ LPCTSTR const CItemSpawn::sm_szLoadKeys[ISPW_QTY + 1] =
 	"AT",
 	"COUNT",
 	"DELOBJ",
+	"FORCERESTART",
 	"RESET",
 	"START",
 	"STOP",
@@ -455,6 +457,11 @@ bool CItemSpawn::r_LoadVal(CScript & s)
 		case ISPW_STOP:
 			KillChildren();
 			SetTimeout(-1);
+			return true;
+		case ISPW_FORCERESTART:
+			KillChildren();
+			OnTick(true);
+			SetTimeout(0);
 			return true;
 		default:
 			break;
