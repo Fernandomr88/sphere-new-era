@@ -2966,7 +2966,7 @@ void CChar::Spell_CastFail()
 
 	iT1 = static_cast<ITEMID_TYPE>(RES_GET_INDEX(Args.m_VarsLocal.GetKeyNum("CreateObject1")));
 	if ( iT1 )
-		Effect(EFFECT_OBJ, iT1, this, 1, 30, false, iColor, iRender);
+		Effect(EFFECT_OBJ, iT1, this, 1, 15, false, iColor, iRender);
 	Sound(SOUND_SPELL_FIZZLE);
 
 	if ( m_pClient )
