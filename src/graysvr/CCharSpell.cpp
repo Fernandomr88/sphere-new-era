@@ -2947,8 +2947,10 @@ void CChar::Spell_CastFail()
 {
 	ADDTOCALLSTACK("CChar::Spell_CastFail");
 	ITEMID_TYPE iT1 = ITEMID_FX_SPELL_FAIL;
+	BYTE bEffectSpeedSeconds = 30;
 	CScriptTriggerArgs	Args(m_atMagery.m_Spell, 0, m_Act_TargPrv.ObjFind());
 	Args.m_VarsLocal.SetNum("CreateObject1", iT1);
+	Args.m_VarsLocal.SetNum("EffectSpeed", bEffectSpeedSeconds);
 	if ( IsTrigUsed(TRIGGER_SPELLFAIL) )
 	{
 		if ( OnTrigger(CTRIG_SpellFail, this, &Args) == TRIGRET_RET_TRUE )
@@ -2965,8 +2967,9 @@ void CChar::Spell_CastFail()
 	DWORD iRender = static_cast<DWORD>(maximum(0, Args.m_VarsLocal.GetKeyNum("EffectRender")));
 
 	iT1 = static_cast<ITEMID_TYPE>(RES_GET_INDEX(Args.m_VarsLocal.GetKeyNum("CreateObject1")));
-	if ( iT1 )
-		Effect(EFFECT_OBJ, iT1, this, 1, 15, false, iColor, iRender);
+	bEffectSpeedSeconds =  static_cast<BYTE>(maximum(0, Args.m_VarsLocal.GetKeyNum("EffectSpeed")));
+	if ( iT1 && bEffectSpeedSeconds )
+		Effect(EFFECT_OBJ, iT1, this, 1, bEffectSpeedSeconds, false, iColor, iRender);
 	Sound(SOUND_SPELL_FIZZLE);
 
 	if ( m_pClient )
