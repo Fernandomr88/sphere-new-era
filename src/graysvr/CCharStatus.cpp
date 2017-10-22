@@ -179,7 +179,7 @@ int CChar::GetWeightLoadPercent( int iWeight ) const
 	// Get a percent of load.
 	if ( IsPriv(PRIV_GM) )
 		return 1;
-	
+
 	int	MaxCarry = g_Cfg.Calc_MaxCarryWeight(this);
 	if ( !MaxCarry )
 		return 1000;	// suppose self extra-overloaded
@@ -610,7 +610,7 @@ CItem *CChar::GetSpellbook(SPELL_TYPE iSpell) const
 			continue;
 		if ( pItem->IsSpellInBook(iSpell) )
 			return pItem;
-		
+
 		pReturn = pItem; // spellbook found, but it doesn't have the spell... return this book if nothing better is found
 	}
 
@@ -626,7 +626,7 @@ CItem *CChar::GetSpellbook(SPELL_TYPE iSpell) const
 			if ( (iSpell < pItemDef->m_ttSpellbook.m_Offset) || (iSpell > pItemDef->m_ttSpellbook.m_Offset + pItemDef->m_ttSpellbook.m_MaxSpells) )
 				continue;
 			if ( pItem->IsSpellInBook(iSpell) )
-				return pItem;	
+				return pItem;
 
 			pReturn = pItem;	// spellbook found, but it doesn't have the spell... return this book if nothing better is found
 		}
@@ -1030,7 +1030,7 @@ bool CChar::CanSeeLOS( const CPointMap &ptDst, CPointMap *pptBlock, int iMaxDist
 	ADDTOCALLSTACK("CChar::CanSeeLOS");
 	if ( (m_pPlayer && (g_Cfg.m_iAdvancedLos & ADVANCEDLOS_PLAYER)) || (m_pNPC && (g_Cfg.m_iAdvancedLos & ADVANCEDLOS_NPC)) )
 		return CanSeeLOS_New(ptDst, pptBlock, iMaxDist, wFlags);
-	
+
 	// Max distance of iMaxDist
 	// Line of sight check
 	// NOTE: if not blocked. pptBlock is undefined.
@@ -1131,7 +1131,7 @@ bool CChar::CanSeeLOS_New( const CPointMap &ptDst, CPointMap *pptBlock, int iMax
 		WARNLOS(("GM Pass\n"));
 		return true;
 	}
-		
+
 	CPointMap ptSrc = GetTopPoint();
 	CPointMap ptNow(ptSrc);
 
@@ -1154,23 +1154,23 @@ bool CChar::CanSeeLOS_New( const CPointMap &ptDst, CPointMap *pptBlock, int iMax
 		dist3d = sqrt(static_cast<double>(dist2d*dist2d + dz*dz));
 	else
 		dist3d = dist2d;
-	
+
 	if ( APPROX(dist2d) > static_cast<double>(iMaxDist) )
 	{
 		WARNLOS(("( APPROX(dist2d)(%f) > ((double)iMaxDist)(%f) ) --> NOLOS\n", APPROX(dist2d), (double)iMaxDist));
 		return CanSeeLOS_New_Failed(pptBlock, ptNow);
 	}
-	
+
 	double dFactorX, dFactorY, dFactorZ;
 	dFactorX = dx / dist3d;
 	dFactorY = dy / dist3d;
 	dFactorZ = dz / dist3d;
-	
+
 	double nPx, nPy, nPz;
 	nPx = ptSrc.m_x;
 	nPy = ptSrc.m_y;
 	nPz = ptSrc.m_z;
-	
+
 	std::vector<CPointMap> path;
 	for (;;)
 	{
@@ -1200,7 +1200,7 @@ bool CChar::CanSeeLOS_New( const CPointMap &ptDst, CPointMap *pptBlock, int iMax
 		else
 			break;
 	}
-	
+
 	if ( path.size() )
 	{
 		if ( path.at(path.size() - 1) != ptDst )
@@ -1211,11 +1211,11 @@ bool CChar::CanSeeLOS_New( const CPointMap &ptDst, CPointMap *pptBlock, int iMax
 		path.clear();
 		return CanSeeLOS_New_Failed(pptBlock, ptNow);
 	}
-	
+
 	WARNLOS(("Path calculated %" FMTSIZE_T "\n", path.size()));
 	// Ok now we should loop through all the points and checking for maptile, staticx, items, multis.
 	// If something is in the way and it has the wrong flags LOS return false
-	
+
 	const CGrayMapBlock *pBlock			= NULL;		// Block of the map (for statics)
 	const CUOStaticItemRec *pStatic		= NULL;		// Statics iterator (based on GrayMapBlock)
 	const CGrayMulti *pMulti 			= NULL;		// Multi Def (multi check)
@@ -1234,10 +1234,10 @@ bool CChar::CanSeeLOS_New( const CPointMap &ptDst, CPointMap *pptBlock, int iMax
 
 	CRegionBase *pSrcRegion = ptSrc.GetRegion(REGION_TYPE_AREA|REGION_TYPE_ROOM|REGION_TYPE_MULTI);
 	CRegionBase *pNowRegion = NULL;
-	
-	int lp_x = 0, lp_y = 0; 
+
+	int lp_x = 0, lp_y = 0;
 	signed char min_z = 0, max_z = 0;
-	
+
 	for (size_t i = 0; i < path.size(); lp_x = ptNow.m_x, lp_y = ptNow.m_y, pItemDef = NULL, pStatic = NULL, pMulti = NULL, pMultiItem = NULL, min_z = 0, max_z = 0, ++i )
 	{
 		ptNow = path.at(i);
@@ -1417,10 +1417,10 @@ bool CChar::CanSeeLOS_New( const CPointMap &ptDst, CPointMap *pptBlock, int iMax
 				}
 			}
 		}
-		
+
 		if ( !bPath )
 			break;
-		
+
 		// --------- In game items ----------
 		if ( !(flags & LOS_NB_DYNAMIC) )
 		{
@@ -1511,9 +1511,9 @@ bool CChar::CanSeeLOS_New( const CPointMap &ptDst, CPointMap *pptBlock, int iMax
 
 		if ( !bPath )
 			break;
-		
+
 		// ----------- Multis ---------------
-		
+
 		if ( !(flags & LOS_NB_MULTI) )
 		{
 			if ( !((flags & LOS_NB_LOCAL_MULTI) && (pSrcRegion == pNowRegion)) )
@@ -1695,6 +1695,11 @@ bool CChar::CanTouch( const CObjBase *pObj ) const
 		bool bDeathImmune = IsPriv(PRIV_GM);
 		switch ( pItem->GetType() )
 		{
+			case IT_DOOR:
+			case IT_DOOR_LOCKED:
+			case IT_DOOR_OPEN:
+				return (iDist <= 2);
+
 			case IT_SIGN_GUMP:	// can be seen from a distance.
 				return (iDist <= UO_MAP_VIEW_SIGHT);
 
