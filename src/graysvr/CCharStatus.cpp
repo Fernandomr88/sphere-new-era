@@ -1698,7 +1698,11 @@ bool CChar::CanTouch( const CObjBase *pObj ) const
 			case IT_DOOR:
 			case IT_DOOR_LOCKED:
 			case IT_DOOR_OPEN:
-				return (iDist <= 2);
+				if (iDist <= 2)
+				{
+					return true;
+				}
+				break;
 
 			case IT_SIGN_GUMP:	// can be seen from a distance.
 				return (iDist <= UO_MAP_VIEW_SIGHT);
