@@ -1898,7 +1898,7 @@ bool CChar::ItemDrop( CItem * pItem, const CPointMap & pt )
 			pStack = AreaItems.GetItem();
 			if ( pStack == NULL )
 				break;
-			if ( pStack->GetTopZ() < pt.m_z || pStack->GetTopZ() > iStackMaxZ )
+			if ( (pStack->GetTopZ() < pt.m_z) || (pStack->GetTopZ() > pt.m_z + 20) )
 				continue;
 
 			ptStack.m_z += maximum(pStack->GetHeight(), 1);
@@ -1906,6 +1906,10 @@ bool CChar::ItemDrop( CItem * pItem, const CPointMap & pt )
 			if ( (ptStack.m_z > iStackMaxZ) || (ptStack.m_z + maximum(pItem->GetHeight(), 1) > iStackMaxZ + 3) )
 				return false;
 		}
+
+		if ( !CanSeeLOS(ptStack) )
+			return false;
+
 		return( pItem->MoveToCheck( ptStack, this ));	// don't flip the item if it got stacked
 	}
 
