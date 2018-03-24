@@ -762,7 +762,7 @@ void CChar::Skill_Experience( SKILL_TYPE skill, int difficulty )
 		if ( iStatVal <= 0 )	// some odd condition
 			continue;
 
-		if (iStatSum >= iStatCap)	// stat cap already reached
+		if (iStatSum > iStatCap)	// stat cap already reached
 			break;
 
 		short iStatMax = Stat_GetLimit(static_cast<STAT_TYPE>(i));
