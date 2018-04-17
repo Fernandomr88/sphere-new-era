@@ -2026,7 +2026,7 @@ int CChar::Skill_DetectHidden( SKTRIG_TYPE stage )
 	if ( !(g_Cfg.m_iRevealFlags & REVEALF_DETECTINGHIDDEN) )	// skill succeeded, but effect is disabled
 		return 0;
 
-	int iRadius = ( Skill_GetAdjusted(SKILL_DETECTINGHIDDEN) / 8 ) + 1;
+	int iRadius = ( Skill_GetAdjusted(SKILL_DETECTINGHIDDEN) / 32 ) + 1;
 
 	CWorldSearch Area(GetTopPoint(), iRadius);
 	bool bFound = false;
