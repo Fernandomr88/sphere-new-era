@@ -918,7 +918,7 @@ bool CChar::Stat_Decrease(STAT_TYPE stat, SKILL_TYPE skill)
 	// Check for stats degrade.
 	int iStatSumAvg = Stat_GetLimit(STAT_QTY);
 	int iStatSum = Stat_GetSum() + 1;	// +1 here assuming we are going to have +1 stat at some point thus we are calling this function
-	if (iStatSum < iStatSumAvg)		//No need to lower any stat.
+	if (iStatSum <= iStatSumAvg)		//No need to lower any stat.
 		return true;
 
 	int iminval;
