@@ -546,7 +546,7 @@ BYTE CChar::GetModeFlag( const CClient *pViewer ) const
 	CCharBase *pCharDef = Char_GetDef();
 	BYTE mode = 0;
 
-	if ( IsStatFlag(STATF_Freeze|STATF_Stone) )
+	if ( IsStatFlag(STATF_Stone) )
 		mode |= CHARMODE_FREEZE;
 	if ( pCharDef->IsFemale() )
 		mode |= CHARMODE_FEMALE;
@@ -558,8 +558,8 @@ BYTE CChar::GetModeFlag( const CClient *pViewer ) const
 	}
 	else
 	{
-		if ( IsStatFlag(STATF_Poisoned) )
-			mode |= CHARMODE_POISON;
+		// if ( IsStatFlag(STATF_Poisoned) )
+		// 	mode |= CHARMODE_POISON;
 	}
 
 	if ( IsStatFlag(STATF_INVUL) )
