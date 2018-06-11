@@ -322,9 +322,9 @@ PacketHealthBarUpdate::PacketHealthBarUpdate(const CClient* target, const CChar*
 
 	writeInt16(2);
 	writeInt16(GreenBar);
-	writeByte(character->IsStatFlag(STATF_Poisoned));
+	writeByte(false);
 	writeInt16(YellowBar);
-	writeByte(character->IsStatFlag(STATF_Freeze|STATF_Sleeping|STATF_Hallucinating|STATF_Stone));
+	writeByte(character->IsStatFlag(STATF_Sleeping|STATF_Hallucinating|STATF_Stone));
 
 	push(target);
 }

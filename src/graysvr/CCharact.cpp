@@ -312,8 +312,8 @@ void CChar::LayerAdd( CItem * pItem, LAYER_TYPE layer )
 			return;
 		case LAYER_FLAG_Stuck:
 			StatFlag_Set( STATF_Freeze );
-			if ( m_pClient )
-				m_pClient->addBuff(BI_PARALYZE, 1075827, 1075828, static_cast<WORD>(pItem->GetTimerAdjusted()));
+			// if ( m_pClient )
+				// m_pClient->addBuff(BI_PARALYZE, 1075827, 1075828, static_cast<WORD>(pItem->GetTimerAdjusted()));
 			break;
 		default:
 			break;

@@ -1203,7 +1203,7 @@ void CChar::Spell_Effect_Add(CItem *pSpell)
 			if ( m_pClient && IsSetOF(OF_Buffs) )
 			{
 				m_pClient->removeBuff(BI_PARALYZE);
-				m_pClient->addBuff(BI_PARALYZE, 1075827, 1075828, iTimerEffect);
+				// m_pClient->addBuff(BI_PARALYZE, 1075827, 1075828, iTimerEffect);
 			}
 			return;
 		}

@@ -43,7 +43,7 @@ void CClient::resendBuffs()
 	if ( pStuck )
 	{
 		removeBuff(BI_PARALYZE);
-		addBuff(BI_PARALYZE, 1075827, 1075828, static_cast<WORD>(pStuck->GetTimerAdjusted()));
+		// addBuff(BI_PARALYZE, 1075827, 1075828, static_cast<WORD>(pStuck->GetTimerAdjusted()));
 	}
 
 	// Spells
@@ -177,7 +177,7 @@ void CClient::resendBuffs()
 				break;
 			case SPELL_Paralyze:
 				removeBuff(BI_PARALYZE);
-				addBuff(BI_PARALYZE, 1075827, 1075828, iTimerEffect);
+				// addBuff(BI_PARALYZE, 1075827, 1075828, iTimerEffect);
 				break;
 			case SPELL_Magic_Reflect:
 			{
