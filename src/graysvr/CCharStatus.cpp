@@ -558,8 +558,8 @@ BYTE CChar::GetModeFlag( const CClient *pViewer ) const
 	}
 	else
 	{
-		// if ( IsStatFlag(STATF_Poisoned) )
-		// 	mode |= CHARMODE_POISON;
+		if ( IsStatFlag(STATF_Poisoned) )
+			mode |= CHARMODE_POISON;
 	}
 
 	if ( IsStatFlag(STATF_INVUL) )
