@@ -3109,7 +3109,7 @@ void NetworkInput::processData()
 				if ( g_Cfg.m_iDeadSocketTime > 0 && iLastEventDiff > g_Cfg.m_iDeadSocketTime )
 				{
 					g_Log.Event(LOGM_CLIENTS_LOG|LOGL_EVENT, "%lx:Frozen client disconnected.\n", state->id());
-					state->m_client->addLoginErr( PacketLoginError::Other );		//state->markReadClosed();
+					state->markReadClosed();
 				}
 			}
 
