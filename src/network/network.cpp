@@ -1503,7 +1503,7 @@ void NetworkIn::acceptConnection(void)
 			DEBUGNETWORK(("Closing incoming connection [max ip=%ld, clients max ip=%ld).\n", maxIp, climaxIp));
 
 			CLOSESOCKET(h);
-			if ( g_Log.GetLogMask() & LOGM_CLIENTS_LOG )
+/*			if ( g_Log.GetLogMask() & LOGM_CLIENTS_LOG )
 			{
 				if ( ip.m_blocked )
 					g_Log.Event(LOGM_CLIENTS_LOG|LOGL_WARN, "Connection from %s rejected. (Blocked IP)\n", (LPCTSTR)client_addr.GetAddrStr());
@@ -1515,7 +1515,7 @@ void NetworkIn::acceptConnection(void)
 					g_Log.Event(LOGM_CLIENTS_LOG|LOGL_WARN, "Connection from %s rejected. (MAXPINGS reached %ld/%ld)\n", (LPCTSTR)client_addr.GetAddrStr(), ip.m_pings, static_cast<long>(NETHISTORY_MAXPINGS));
 				else
 					g_Log.Event(LOGM_CLIENTS_LOG|LOGL_WARN, "Connection from %s rejected.\n", (LPCTSTR)client_addr.GetAddrStr());
-			}
+			} */
 		}
 		else
 		{
@@ -2587,7 +2587,7 @@ void NetworkManager::acceptNewConnection(void)
 		DEBUGNETWORK(("Closing incoming connection [max ip=%ld, clients max ip=%ld].\n", maxIp, climaxIp));
 
 		CLOSESOCKET(h);
-		if ( g_Log.GetLogMask() & LOGM_CLIENTS_LOG )
+		/* if ( g_Log.GetLogMask() & LOGM_CLIENTS_LOG )
  		{
  			if ( ip.m_blocked )
  				g_Log.Event(LOGM_CLIENTS_LOG|LOGL_WARN, "Connection from %s rejected. (Blocked IP)\n", static_cast<LPCTSTR>(client_addr.GetAddrStr()));
@@ -2599,7 +2599,7 @@ void NetworkManager::acceptNewConnection(void)
  				g_Log.Event(LOGM_CLIENTS_LOG|LOGL_WARN, "Connection from %s rejected. (MAXPINGS reached %ld/%ld)\n", static_cast<LPCTSTR>(client_addr.GetAddrStr()), ip.m_pings, static_cast<long>(NETHISTORY_MAXPINGS));
  			else
  				g_Log.Event(LOGM_CLIENTS_LOG|LOGL_WARN, "Connection from %s rejected.\n", static_cast<LPCTSTR>(client_addr.GetAddrStr()));
- 		}
+ 		} */
 		return;
 	}
 
