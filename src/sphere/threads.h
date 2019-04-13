@@ -206,7 +206,11 @@ public:
 		if (m_freezeCallStack == false)
 		{
 			m_stackInfo[m_stackPos].functionName = name;
+#ifdef _WIN32
+			m_stackInfo[m_stackPos].startTime = ::GetTickCount();
+#else
 			m_stackInfo[m_stackPos].startTime = ::GetTickCount64();
+#endif
 			m_stackPos++;
 			m_stackInfo[m_stackPos].startTime = 0;
 		}
