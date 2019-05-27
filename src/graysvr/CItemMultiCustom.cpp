@@ -56,7 +56,7 @@ CItemMultiCustom::~CItemMultiCustom()
 	m_designMain.m_vectorComponents.clear();
 	if ( m_designMain.m_pData != NULL )
 	{
-		delete[] m_designMain.m_pData;
+		delete m_designMain.m_pData;
 		m_designMain.m_pData = NULL;
 		m_designMain.m_iDataRevision = 0;
 	}
@@ -64,7 +64,7 @@ CItemMultiCustom::~CItemMultiCustom()
 	m_designWorking.m_vectorComponents.clear();
 	if ( m_designWorking.m_pData != NULL )
 	{
-		delete[] m_designWorking.m_pData;
+		delete m_designWorking.m_pData;
 		m_designWorking.m_pData = NULL;
 		m_designWorking.m_iDataRevision = 0;
 	}
@@ -72,7 +72,7 @@ CItemMultiCustom::~CItemMultiCustom()
 	m_designBackup.m_vectorComponents.clear();
 	if ( m_designBackup.m_pData != NULL )
 	{
-		delete[] m_designBackup.m_pData;
+		delete m_designBackup.m_pData;
 		m_designBackup.m_pData = NULL;
 		m_designBackup.m_iDataRevision = 0;
 	}
@@ -80,7 +80,7 @@ CItemMultiCustom::~CItemMultiCustom()
 	m_designRevert.m_vectorComponents.clear();
 	if ( m_designRevert.m_pData != NULL )
 	{
-		delete[] m_designRevert.m_pData;
+		delete m_designRevert.m_pData;
 		m_designRevert.m_pData = NULL;
 		m_designRevert.m_iDataRevision = 0;
 	}

@@ -13,7 +13,7 @@ WARN	= -Wall -Wno-unknown-pragmas -Wno-invalid-offsetof -Wno-unused-but-set-vari
 CWARN	= -Wall -Wno-unknown-pragmas -Wno-unused-but-set-variable -Wno-switch -Wno-implicit-function-declaration
 
 ifdef DBG
-DEBUG	= -s -ggdb3
+DEBUG	= -ggdb3
 else
 DEBUG	= -s
 endif
@@ -32,11 +32,11 @@ DEFNIX  = -D_LINUX
 NIGHTLYDEFS = -D_NIGHTLYBUILD -DTHREAD_TRACK_CALLSTACK
 # endif
 
-ifdef DBG
-DEBUGDEFS = -D_DEBUG -DTHREAD_TRACK_CALLSTACK
-DBGWARN = -Wno-unused-variable
+#ifdef DBG
+#DEBUGDEFS = -D_DEBUG -DTHREAD_TRACK_CALLSTACK
+#DBGWARN = -Wno-unused-variable
 # DEBUGDEFS = -D_DEBUG -D_PACKETDUMP -D_TESTEXCEPTION -DDEBUG_CRYPT_MSGS
-endif
+#endif
 
 EXTRADEFS = -D_MTNETWORK
 DEFINES = -DGRAY_SVR -D_CONSOLE -D_REENTRANT $(DEFNIX) $(NIGHTLYDEFS) $(EXTRADEFS) $(DEBUGDEFS)
